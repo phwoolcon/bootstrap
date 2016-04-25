@@ -1,0 +1,23 @@
+{
+    "name": "phwoolcon/bootstrap",
+    "description": "Phalcon + Swoole Framework Bootstrap",
+    "keywords": ["framework", "phwoolcon", "phalcon", "swoole"],
+    "type": "project",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Christopher CHEN",
+            "email": "fishdrowned@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.0",
+        "phwoolcon/phwoolcon": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+            "app"
+        ]
+    }
+}
