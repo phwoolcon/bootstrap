@@ -3,6 +3,7 @@ return [
     'debug' => false,
     'autoload' => [
         'namespaces' => [
+            'Admin' => ROOT_PATH . '/app/Admin',
             'Commands' => ROOT_PATH . '/commands',
         ],
     ],
