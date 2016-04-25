@@ -6,6 +6,7 @@ return [
             'adapter' => 'File',
             'options' => [
                 'cacheDir' => 'cache',
+                'prefix' => 'c.'
             ],
         ],
         'redis' => [

@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+error_reporting(-1);
+
+defined('ROOT_PATH') || define('ROOT_PATH', dirname(__DIR__));
+
+include ROOT_PATH . '/bootstrap/functions.php';
+include ROOT_PATH . '/bootstrap/di.php';
+include ROOT_PATH . '/vendor/autoload.php';
+$loader->registerNamespaces(['Commands' => ROOT_PATH . '/commands'], true);
+
+use Phwoolcon\Cli;
+
+$app = Cli::register($di);
+$app->run();
