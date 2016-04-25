@@ -1,6 +1,6 @@
 /.idea/
 /vendor/
 /ignore/
-/app/config/production
-/app/config/testing
+/config/production
+/config/testing
 /storage
