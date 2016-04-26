@@ -27,7 +27,7 @@ $di->setShared('ROOT_PATH', function () {
 });
 $di->setShared('CONFIG_PATH', function () {
     static $configPath;
-    $configPath or $configPath = ROOT_PATH . '/config';
+    $configPath or $configPath = ROOT_PATH . '/app/config';
     return $configPath;
 });
 
