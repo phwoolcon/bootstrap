@@ -7,7 +7,6 @@ return [
             'Commands' => ROOT_PATH . '/commands',
         ],
     ],
-    'load_config_from_db' => false,
     'timezone' => 'UTC',
     'i18n' => [
         'locale' => 'zh_CN',

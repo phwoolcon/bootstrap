@@ -1,7 +1,7 @@
 <?php
 return [
     'fetch' => PDO::FETCH_CLASS,
-    'default' => 'mysql',
+    'default' => '',
     'connections' => [
         'mysql' => [
             'adapter'    => 'Mysql',
