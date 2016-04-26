@@ -4,7 +4,7 @@ return [
     'autoload' => [
         'namespaces' => [
             'Admin' => ROOT_PATH . '/app/Admin',
-            'Commands' => ROOT_PATH . '/commands',
+            'Commands' => ROOT_PATH . '/bin/commands',
         ],
     ],
     'timezone' => 'UTC',
