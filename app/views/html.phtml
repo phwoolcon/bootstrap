@@ -1,0 +1,12 @@
+<?php
+/* @var Phalcon\Mvc\View\Engine\Php $this */
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo View::getParam('page_title'); ?></title>
+</head>
+<body>
+<?php echo $this->getContent(); ?>
+</body>
+</html>

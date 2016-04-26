@@ -6,7 +6,7 @@ return [
             'adapter' => 'File',
             'options' => [
                 'cacheDir' => 'cache',
-                'prefix' => 'c.'
+                'prefix' => 'c.',
             ],
         ],
         'redis' => [
@@ -16,7 +16,19 @@ return [
                 'port' => 6379,
                 'index' => 5,
                 'persistent' => true,
-                'prefix' => '.'
+                'prefix' => '.',
+            ],
+        ],
+        'memcached' => [
+            'adapter' => 'Libmemcached',
+            'options' => [
+                'servers' => [
+                    ['host' => '127.0.0.1', 'port' => 11211, 'weight' => 1],
+                ],
+                'client' => class_exists('Memcached') ? [
+                    Memcached::OPT_HASH => Memcached::HASH_MD5,
+                    Memcached::OPT_PREFIX_KEY => 'phwoolcon.',
+                ] : [],
             ],
         ],
     ],

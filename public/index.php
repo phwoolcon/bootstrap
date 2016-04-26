@@ -18,6 +18,6 @@ set_error_handler('errorHandler');
 $app = new Phalcon\Mvc\Application($di);
 $di->setShared('app', $app);
 
-Router::dispatch();
+Router::dispatch()->send();
 
 profilerStop();

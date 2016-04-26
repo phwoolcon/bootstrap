@@ -7,6 +7,7 @@ use Phwoolcon\Cache;
 use Phwoolcon\Config;
 use Phwoolcon\Cookie;
 use Phwoolcon\Db;
+use Phwoolcon\I18n;
 use Phwoolcon\Log;
 use Phwoolcon\Router;
 use Phwoolcon\Session;
@@ -23,6 +24,11 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname(__DIR__));
 $di = new FactoryDefault();
 $di->setShared('ROOT_PATH', function () {
     return ROOT_PATH;
+});
+$di->setShared('CONFIG_PATH', function () {
+    static $configPath;
+    $configPath or $configPath = ROOT_PATH . '/config';
+    return $configPath;
 });
 
 include ROOT_PATH . '/vendor/phwoolcon/phwoolcon/src/functions.php';
@@ -44,6 +50,9 @@ Log::register($di);
 Config::register($di);
 Aliases::register($di);
 Router::register($di);
+I18n::register($di);
+Session::register($di);
+View::register($di);
 
 $loader->registerNamespaces(Config::get('app.autoload.namespaces'), true);
 

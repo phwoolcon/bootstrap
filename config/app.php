@@ -8,15 +8,12 @@ return [
         ],
     ],
     'timezone' => 'UTC',
-    'i18n' => [
-        'locale' => 'zh_CN',
-        'use_browser' => false,
-    ],
     'url' => 'http://localhost',
     'class_aliases' => [
         'Config' => 'Phwoolcon\Config',
         'Log' => 'Phwoolcon\Log',
         'Router' => 'Phwoolcon\Router',
+        'View' => 'Phwoolcon\View',
         'User' => 'Phwoolcon\Model\User',
     ],
     'log' => [
