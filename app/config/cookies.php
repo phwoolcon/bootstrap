@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'encrypt' => false,
+    'encrypt' => true,
     'encrypt_key' => 'ENCRYPT_KEY',
 ];

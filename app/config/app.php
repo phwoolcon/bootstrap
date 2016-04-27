@@ -1,6 +1,7 @@
 <?php
 return [
     'debug' => false,
+    'cache_config' => true,
     'autoload' => [
         'namespaces' => [
             'Admin' => ROOT_PATH . '/app/Admin',

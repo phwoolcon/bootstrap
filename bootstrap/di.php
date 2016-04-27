@@ -5,7 +5,7 @@ use Phalcon\Loader;
 use Phwoolcon\Aliases;
 use Phwoolcon\Cache;
 use Phwoolcon\Config;
-use Phwoolcon\Cookie;
+use Phwoolcon\Cookies;
 use Phwoolcon\Db;
 use Phwoolcon\I18n;
 use Phwoolcon\Log;
@@ -51,6 +51,7 @@ Config::register($di);
 Aliases::register($di);
 Router::register($di);
 I18n::register($di);
+Cookies::register($di);
 Session::register($di);
 View::register($di);
 
