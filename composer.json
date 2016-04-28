@@ -19,5 +19,9 @@
         "classmap": [
             "app"
         ]
+    },
+    "scripts": {
+        "post-update-cmd": "bin/dump-autoload",
+        "post-install-cmd": ["bin/dump-autoload"]
     }
 }

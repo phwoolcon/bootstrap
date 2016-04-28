@@ -31,15 +31,16 @@ $di->setShared('CONFIG_PATH', function () {
     return $configPath;
 });
 
-include ROOT_PATH . '/vendor/phwoolcon/phwoolcon/src/functions.php';
-
-// Register class loader
-if (!$classMap = include ROOT_PATH . '/vendor/composer/autoload_classmap.php') {
-    echo $error = sprintf('Autoload class map not available, please run command "%s/bin/dump-autoload" first.', ROOT_PATH);
+if (!is_file($includes = ROOT_PATH . '/vendor/composer/autoload_phalcon_files.php')) {
+    echo $error = sprintf('Autoload not ready, please run command "%s/bin/dump-autoload" first.', ROOT_PATH);
     throw new UnexpectedValueException($error);
 }
+include $includes;
+
+// Register class loader
 $loader = new Loader;
-$loader->registerClasses($classMap)
+$loader->registerClasses(include ROOT_PATH . '/vendor/composer/autoload_classmap.php')
+    ->registerNamespaces(include ROOT_PATH . '/vendor/composer/autoload_phalcon_psr4.php')
     ->register();
 $di->setShared('loader', $loader);
 

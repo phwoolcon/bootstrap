@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+error_reporting(-1);
+
+defined('ROOT_PATH') || define('ROOT_PATH', dirname(__DIR__));
+
+$composerPsr4 = ROOT_PATH . '/vendor/composer/autoload_psr4.php';
+$phalconPsr4 = ROOT_PATH . '/vendor/composer/autoload_phalcon_psr4.php';
+
+$content = strtr(file_get_contents($composerPsr4), ["\\\\'" => "'", 'array($vendorDir' => '($vendorDir']);
+file_put_contents($phalconPsr4, $content);
+
+$composerInclude = include ROOT_PATH . '/vendor/composer/autoload_files.php';
+$phalconInclude = ROOT_PATH . '/vendor/composer/autoload_phalcon_files.php';
+$content = '<?php
+';
+if (is_array($composerInclude)) foreach ($composerInclude as $file) {
+    $content .= sprintf("include ROOT_PATH . '%s';\n", strtr($file, [ROOT_PATH => '']));
+}
+file_put_contents($phalconInclude, $content);
