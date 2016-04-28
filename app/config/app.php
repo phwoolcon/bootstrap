@@ -14,8 +14,10 @@ return [
         'Config' => 'Phwoolcon\Config',
         'Log' => 'Phwoolcon\Log',
         'Router' => 'Phwoolcon\Router',
+        'Session' => 'Phwoolcon\Session',
         'View' => 'Phwoolcon\View',
         'User' => 'Phwoolcon\Model\User',
+        'DisableSessionFilter' => 'Phwoolcon\Router\Filter\DisableSessionFilter',
     ],
     'log' => [
         'adapter' => 'file',
