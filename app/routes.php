@@ -10,7 +10,7 @@ $this->prefix('/api', [
                 ->setHeader('Content-Type', 'application/json');
         },
     ],
-], 'DisableSessionFilter')->prefix('/admin', [
+], DisableSessionFilter::instance())->prefix('/admin', [
     'GET' => [
         '/:params' => 'Admin\Controllers\AccountController::missingMethod',
         '/' => 'Admin\Controllers\AccountController::getIndex',
