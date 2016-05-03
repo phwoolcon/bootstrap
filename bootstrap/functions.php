@@ -98,7 +98,15 @@ function exceptionHandler(Exception $exception)
 
 function errorHandler($errNo, $errStr, $errFile, $errLine)
 {
-    throw new ErrorException($errNo . ' - ' . $errStr, $errNo, 1, $errFile, $errLine);
+    $levels = [
+        E_WARNING => 'Warning',
+        E_NOTICE => 'Notice',
+        E_STRICT => 'Strict',
+        E_DEPRECATED => 'Deprecated',
+    ];
+    $errLevel = $errNo;
+    isset($levels[$errNo]) and $errLevel = $levels[$errNo];
+    throw new ErrorException($errLevel . ' - ' . $errStr, $errNo, 1, $errFile, $errLine);
 }
 
 function profilerStart()
