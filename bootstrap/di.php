@@ -12,6 +12,7 @@ use Phwoolcon\Log;
 use Phwoolcon\Router;
 use Phwoolcon\Session;
 use Phwoolcon\View;
+use Phwoolcon\Auth\Auth;
 
 if (!extension_loaded('phalcon')) {
     echo $error = 'Extension "phalcon" not detected, please install or activate it.';
@@ -55,6 +56,7 @@ I18n::register($di);
 Cookies::register($di);
 Session::register($di);
 View::register($di);
+Auth::register($di);
 
 $loader->registerNamespaces(Config::get('app.autoload.namespaces'), true);
 

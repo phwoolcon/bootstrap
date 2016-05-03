@@ -1,5 +1,5 @@
 <?php
-use Phwoolcon\Exception\NotFoundException;
+use Phwoolcon\Exception\HttpRuntimeException;
 use Phwoolcon\Log;
 
 function sendHttpStatus($code)
@@ -83,7 +83,7 @@ function exceptionHandler(Exception $exception)
 {
     profilerStop();
     Log::exception($exception);
-    if ($exception instanceof NotFoundException) {
+    if ($exception instanceof HttpRuntimeException) {
         $response = $exception->toResponse();
         $response->send();
         return;

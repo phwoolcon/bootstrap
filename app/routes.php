@@ -19,6 +19,14 @@ $this->prefix('/api', [
     'POST' => [
         '/login' => 'Admin\Controllers\AccountController::postLogin',
     ],
+])->prefix('/user', [
+    'GET' => [
+        '/' => 'Auth\Controllers\AccountController::getIndex',
+        '/login' => 'Auth\Controllers\AccountController::getLogin',
+    ],
+    'POST' => [
+        '/login' => 'Auth\Controllers\AccountController::postLogin',
+    ],
 ]);
 
 return [

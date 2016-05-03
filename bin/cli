@@ -10,5 +10,8 @@ include ROOT_PATH . '/bootstrap/di.php';
 
 use Phwoolcon\Cli;
 
+$di->setShared('MIGRATION_PATH', function () {
+    return ROOT_PATH . '/bin/migrations';
+});
 $app = Cli::register($di);
 $app->run();

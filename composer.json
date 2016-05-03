@@ -13,7 +13,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.5.0",
-        "phwoolcon/phwoolcon": "dev-master"
+        "phwoolcon/phwoolcon": "dev-master",
+        "phwoolcon/auth": "dev-master"
     },
     "autoload": {
         "classmap": [

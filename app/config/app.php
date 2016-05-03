@@ -5,6 +5,7 @@ return [
     'autoload' => [
         'namespaces' => [
             'Admin' => ROOT_PATH . '/app/Admin',
+            'Auth' => ROOT_PATH . '/app/Auth',
             'Commands' => ROOT_PATH . '/bin/commands',
         ],
     ],
