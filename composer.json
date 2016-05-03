@@ -21,7 +21,9 @@
         ]
     },
     "scripts": {
-        "post-update-cmd": "bin/dump-autoload",
-        "post-install-cmd": ["bin/dump-autoload"]
+        "post-autoload-dump": [
+            "bin/convert-autoload",
+            "bin/cli clear:cache -c"
+        ]
     }
 }

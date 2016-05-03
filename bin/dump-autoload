@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )")"
 composer dump-autoload --optimize
-bin/convert-autoload
