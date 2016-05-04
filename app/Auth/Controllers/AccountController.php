@@ -9,14 +9,14 @@ use Phwoolcon\Router;
 class AccountController extends Controller
 {
 
-    protected function checkStatus()
+    protected function checkLoggedInUser()
     {
         return Auth::getInstance()->getUser();
     }
 
     public function getIndex()
     {
-        if (!$user = $this->checkStatus()) {
+        if (!$user = $this->checkLoggedInUser()) {
             $this->redirect('/user/login');
             return;
         }

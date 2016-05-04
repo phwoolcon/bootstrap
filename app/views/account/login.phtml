@@ -1,0 +1,16 @@
+<form id="auth-login-form" method="post" target="_self" action="<?php echo url('user/login'); ?>" accept-charset="UTF-8">
+    <ul>
+        <li>
+            <label><input type="text" name="login" value="<?php echo Session::get('auth.retry_login'); ?>" placeholder="<?php echo __('Username, email or mobile'); ?>"></label>
+        </li>
+        <li>
+            <label><input type="password" name="password" placeholder="<?php echo __('Password'); ?>"></label>
+        </li>
+        <li>
+            <button type="submit" class="submit"><span><?php echo __('Login'); ?></span></button>
+        </li>
+    </ul>
+    <div class="hidden">
+        <input type="hidden" name="_token" value="<?php echo Session::generateCsrfToken(); ?>">
+    </div>
+</form>

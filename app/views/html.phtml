@@ -2,8 +2,15 @@
 /* @var Phalcon\Mvc\View\Engine\Php $this */
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo View::getPageLanguage(); ?>">
 <head>
+    <meta charset="utf-8"/>
+    <!-- JavaScript Detection -->
+    <script>document.documentElement.className += " js";</script>
+    <!-- Mobile viewport optimisation -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="<?php echo View::getParam('page_keywords'); ?>">
+    <meta name="description" content="<?php echo View::getParam('page_description'); ?>">
     <title><?php echo View::getParam('page_title'); ?></title>
 </head>
 <body>
