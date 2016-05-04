@@ -2,6 +2,8 @@
 return [
     'debug' => false,
     'cache_config' => true,
+    'enable_https' => false,
+    'secure_routes' => [],
     'autoload' => [
         'namespaces' => [
             'Admin' => ROOT_PATH . '/app/Admin',

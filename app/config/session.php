@@ -7,6 +7,10 @@ return [
          * Cookie lifetime, in seconds.
          */
         'lifetime' => 86400,
+        /**
+         * CSRF protection token lifetime, in seconds.
+         */
+        'csrf_token_lifetime' => 3600,
         'cookie_name' => 'phwoolcon',
         'cookie_path' => '/',
         'cookie_domain' => null,
