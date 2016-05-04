@@ -6,10 +6,11 @@ return [
         'mysql' => [
             'adapter'    => 'Mysql',
             'host'       => 'localhost',
-            'dbname'   => 'dbname',
+            'dbname'     => 'dbname',
             'username'   => 'user',
             'password'   => 'password',
             'charset'    => 'utf8mb4',
+            'default_table_charset' => 'utf8_unicode_ci',
             'options'    => [
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES "utf8mb4" COLLATE "utf8mb4_unicode_ci"',
             ],
@@ -17,9 +18,9 @@ return [
         ],
 
         'pgsql' => [
-            'adapter'   => 'Postgresql',
+            'adapter'  => 'Postgresql',
             'host'     => 'localhost',
-            'dbname' => 'dbname',
+            'dbname'   => 'dbname',
             'username' => 'user',
             'password' => 'password',
             'charset'  => 'utf8',

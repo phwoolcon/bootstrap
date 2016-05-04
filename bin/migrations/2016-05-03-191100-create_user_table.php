@@ -4,10 +4,10 @@ use Phalcon\Db\Adapter\Pdo as Adapter;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Phalcon\Db\Reference;
+use Phwoolcon\Cli\Command\Migrate;
 
-/* @var \Phwoolcon\Cli\Command\Migrate $this */
 return [
-    'up' => function (Adapter $db) {
+    'up' => function (Adapter $db, Migrate $migrate) {
         $db->createTable('users', null, [
             'columns' => [
                 new Column('id', [
@@ -20,23 +20,21 @@ return [
                 new Column('username', [
                     'type' => Column::TYPE_VARCHAR,
                     'size' => 20,
-                    'notNull' => true,
+                    'notNull' => false,
                 ]),
                 new Column('email', [
                     'type' => Column::TYPE_VARCHAR,
                     'size' => 255,
-                    'notNull' => true,
-                    'default' => '',
+                    'notNull' => false,
                 ]),
                 new Column('mobile', [
                     'type' => Column::TYPE_VARCHAR,
                     'size' => 20,
-                    'notNull' => true,
-                    'default' => '',
+                    'notNull' => false,
                 ]),
                 new Column('password', [
                     'type' => Column::TYPE_VARCHAR,
-                    'size' => 255,
+                    'size' => 160,
                     'notNull' => true,
                 ]),
                 new Column('confirmed', [
@@ -60,9 +58,12 @@ return [
                 ]),
             ],
             'indexes' => [
-                new Index('username', ['username']),
-                new Index('email', ['email']),
-                new Index('mobile', ['mobile']),
+                new Index('username', ['username'], 'UNIQUE'),
+                new Index('email', ['email'], 'UNIQUE'),
+                new Index('mobile', ['mobile'], 'UNIQUE'),
+            ],
+            'options' => [
+                'TABLE_COLLATION' => $migrate->getDefaultTableCharset(),
             ],
         ]);
         $db->createTable('user_profile', null, [
@@ -74,7 +75,7 @@ return [
                     'notNull' => true,
                     'primary' => true,
                 ]),
-                new Column('name', [
+                new Column('real_name', [
                     'type' => Column::TYPE_VARCHAR,
                     'size' => 32,
                     'notNull' => true,
@@ -103,10 +104,13 @@ return [
                     'notNull' => false,
                 ]),
             ],
+            'options' => [
+                'TABLE_COLLATION' => $migrate->getDefaultTableCharset(),
+            ],
         ]);
     },
-    'down' => function (Adapter $db) {
-        $db->dropTable('users');
-        $db->dropTable('user_profile');
+    'down' => function (Adapter $db, Migrate $migrate) {
+        $db->tableExists('users') and $db->dropTable('users');
+        $db->tableExists('user_profile') and $db->dropTable('user_profile');
     },
 ];
