@@ -1,13 +1,17 @@
 <?php
 
 return [
+    'debug' => true,
     'path' => ROOT_PATH . '/app/views/',
+    'theme' => 'default',
     'top_level' => 'html',
     'default_layout' => 'default',
     'title_separator' => ' - ',
     'title_suffix' => 'Phwoolcon',
     'admin' => [
         'title_suffix' => 'Admin',
-        'layout' => 'admin',
+        'theme' => 'default',
+        'layout' => 'default',
     ],
+    'options' => [],
 ];

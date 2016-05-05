@@ -10,13 +10,13 @@ class AccountController extends Admin
 
     public function getIndex()
     {
-        $this->render('admin', 'index');
+        $this->render('account', 'index');
     }
 
     public function getLogin()
     {
         $this->addPageTitle(__('Login'));
-        $this->render('admin', 'login');
+        $this->render('account', 'login');
     }
 
     public function postLogin()
