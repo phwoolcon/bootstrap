@@ -2,16 +2,16 @@
 /* @var Phalcon\Mvc\View\Engine\Php $this */
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo View::getPageLanguage(); ?>">
+<html lang="<?php echo View::getPageLanguage(); ?>" class="no-js">
 <head>
     <meta charset="utf-8"/>
     <!-- JavaScript Detection -->
-    <script>document.documentElement.className += " js";</script>
+    <script type="text/javascript">(function (h) {h.className = h.className.replace('no-js', '')})(document.documentElement);</script>
     <!-- Mobile viewport optimisation -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="<?php echo View::getParam('page_keywords'); ?>">
-    <meta name="description" content="<?php echo View::getParam('page_description'); ?>">
-    <title><?php echo View::getParam('page_title'); ?></title>
+    <meta name="keywords" content="<?php echo View::getPageKeywords(); ?>">
+    <meta name="description" content="<?php echo View::getPageDescription(); ?>">
+    <title><?php echo View::getPageTitle(); ?></title>
 </head>
 <body>
 <?php echo $this->getContent(); ?>
