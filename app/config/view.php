@@ -8,10 +8,49 @@ return [
     'default_layout' => 'default',
     'title_separator' => ' - ',
     'title_suffix' => 'Phwoolcon',
+    'assets' => [
+        'head-css' => [
+            'css/styles.css',
+        ],
+        'head-js' => [
+            'js/js.js',
+        ],
+        'body-js' => [
+            'js/js.js',
+        ],
+        'ie-hack-css' => [
+            'css/styles.css',
+        ],
+        'ie-hack-js' => [
+            'js/js.js',
+        ],
+    ],
     'admin' => [
         'title_suffix' => 'Admin',
         'theme' => 'default',
         'layout' => 'default',
+        'assets' => [
+            'head-css' => [
+                'css/styles.css',
+            ],
+            'head-js' => [
+                'js/js.js',
+            ],
+            'body-js' => [
+                'js/js.js',
+            ],
+            'ie-hack-css' => [
+                'css/styles.css',
+            ],
+            'ie-hack-js' => [
+                'js/js.js',
+            ],
+        ],
     ],
-    'options' => [],
+    'options' => [
+        'assets_options' => [
+            'base_path' => ROOT_PATH . '/public',
+            'assets_dir' => 'assets',
+        ],
+    ],
 ];

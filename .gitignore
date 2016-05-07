@@ -4,3 +4,4 @@
 /app/config/production
 /app/config/testing
 /storage
+/public/assets/compiled/

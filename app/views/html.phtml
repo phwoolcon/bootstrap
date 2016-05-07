@@ -12,8 +12,12 @@
     <meta name="keywords" content="<?php echo View::getPageKeywords(); ?>">
     <meta name="description" content="<?php echo View::getPageDescription(); ?>">
     <title><?php echo View::getPageTitle(); ?></title>
+    <?php View::generateHeadCss(); ?>
+    <?php View::generateHeadJs(); ?>
+    <?php View::generateIeHack(); ?>
 </head>
 <body>
 <?php echo $this->getContent(); ?>
+<?php View::generateBodyJs(); ?>
 </body>
 </html>
