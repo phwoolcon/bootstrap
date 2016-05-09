@@ -1,0 +1,10 @@
+<?php
+/* @var Phwoolcon\View\Engine\Php $this */
+?>
+<?php if (is_array($data = $this->flashSession->getMessages())) foreach ($data as $type => $messages) { ?>
+    <ul class="messages messages-<?php echo $type; ?>">
+        <?php foreach ($messages as $message) { ?>
+        <li><?php echo $message; ?></li>
+        <?php } ?>
+    </ul>
+<?php } ?>

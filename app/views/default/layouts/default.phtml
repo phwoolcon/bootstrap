@@ -1,6 +1,7 @@
 <?php
-/* @var Phalcon\Mvc\View\Engine\Php $this */
+/* @var Phwoolcon\View\Engine\Php $this */
 ?>
 <div id="wrap">
+    <?php echo $this->include('page/messages', []); ?>
     <?php echo $this->getContent(); ?>
 </div>

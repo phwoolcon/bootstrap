@@ -54,4 +54,7 @@ return [
             'cache_assets' => true,
         ],
     ],
+    'engines' => [
+        '.phtml' => 'Phwoolcon\View\Engine\Php',
+    ],
 ];
