@@ -1,5 +1,5 @@
 <?php
-use Phwoolcon\Exception\HttpRuntimeException;
+use Phwoolcon\Exception\HttpException;
 use Phwoolcon\Log;
 
 function sendHttpStatus($code)
@@ -83,7 +83,7 @@ function exceptionHandler(Exception $exception)
 {
     profilerStop();
     Log::exception($exception);
-    if ($exception instanceof HttpRuntimeException) {
+    if ($exception instanceof HttpException) {
         $response = $exception->toResponse();
         $response->send();
         return;

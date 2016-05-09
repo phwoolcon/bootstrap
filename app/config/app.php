@@ -21,6 +21,8 @@ return [
         'View' => 'Phwoolcon\View',
         'User' => 'Phwoolcon\Model\User',
         'DisableSessionFilter' => 'Phwoolcon\Router\Filter\DisableSessionFilter',
+        'DisableCsrfFilter' => 'Phwoolcon\Router\Filter\DisableCsrfFilter',
+        'MultiFilter' => 'Phwoolcon\Router\Filter\MultiFilter',
     ],
     'log' => [
         'adapter' => 'file',
