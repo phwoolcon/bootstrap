@@ -51,6 +51,7 @@ return [
         'assets_options' => [
             'base_path' => ROOT_PATH . '/public',
             'assets_dir' => 'assets',
+            'cache_assets' => true,
         ],
     ],
 ];
