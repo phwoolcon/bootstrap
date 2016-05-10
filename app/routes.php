@@ -22,13 +22,15 @@ $this->prefix('/api', [
     'POST' => [
         '/login' => 'Admin\Controllers\AccountController::postLogin',
     ],
-])->prefix('/user', [
+])->prefix('/account', [
     'GET' => [
         '/' => 'Auth\Controllers\AccountController::getIndex',
         '/login' => 'Auth\Controllers\AccountController::getLogin',
+        '/register' => 'Auth\Controllers\AccountController::getRegister',
     ],
     'POST' => [
         '/login' => 'Auth\Controllers\AccountController::postLogin',
+        '/register' => 'Auth\Controllers\AccountController::postRegister',
     ],
 ]);
 

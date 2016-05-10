@@ -19,7 +19,7 @@ class AccountController extends Controller
     public function getIndex()
     {
         if (!$user = $this->checkLoggedInUser()) {
-            $this->redirect('/user/login');
+            $this->redirect('account/login');
             return;
         }
         $this->render('account', 'index');
@@ -35,8 +35,10 @@ class AccountController extends Controller
     public function postLogin()
     {
         $this->rememberRedirectUrl();
+        $credential = $this->request->getPost();
         try {
-            Auth::getInstance()->login($this->request->getPost());
+            Auth::getInstance()->login($credential);
+            $this->clearRememberFormData('auth.retry');
             return $this->redirect($this->session->get('redirect_url', url('account'), true));
         } catch (AuthException $e) {
             $this->flashSession->error($e->getMessage());
@@ -44,7 +46,9 @@ class AccountController extends Controller
             Log::exception($e);
             $this->flashSession->error(__('Login failed'));
         }
-        return $this->redirect('user/login');
+        unset($credential['password']);
+        $this->rememberFormData('auth.retry', $credential);
+        return $this->redirect('account/login');
     }
 
     protected function rememberRedirectUrl()

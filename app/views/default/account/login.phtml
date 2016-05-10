@@ -1,10 +1,10 @@
 <?php
 /* @var Phwoolcon\View\Engine\Php $this */
 ?>
-<form id="auth-login-form" method="post" target="_self" action="<?php echo url('user/login'); ?>" accept-charset="UTF-8">
+<form id="auth-login-form" method="post" target="_self" action="<?php echo url('account/login'); ?>" accept-charset="UTF-8">
     <ul>
         <li>
-            <label><input type="text" name="login" value="<?php echo Session::get('auth.retry_login'); ?>" placeholder="<?php echo __('Username, email or mobile'); ?>"></label>
+            <label><input type="text" name="login" value="<?php echo Session::get('form.data.auth.retry.login'); ?>" placeholder="<?php echo __('Username, email or mobile'); ?>"></label>
         </li>
         <li>
             <label><input type="password" name="password" placeholder="<?php echo __('Password'); ?>"></label>
@@ -12,8 +12,15 @@
         <li>
             <button type="submit" class="submit"><span><?php echo __('Login'); ?></span></button>
         </li>
+        <li>
+            <label><input type="checkbox" name="remember" <?php if (Session::get('form.data.auth.retry.remember')) { ?>checked="checked"<?php } ?> value="1"><?php echo __('Remember Login'); ?></label>
+            <a href="<?php echo url('account/forgot-password'); ?>" class="forgot-password"><?php echo __('Forgot password?'); ?></a>
+        </li>
+        <li>
+            <a href="<?php echo url('account/register'); ?>" class="register"><?php echo __('Register'); ?></a>
+        </li>
     </ul>
     <div class="hidden">
-        <input type="hidden" name="_token" value="<?php echo Session::generateCsrfToken(); ?>">
+        <input type="hidden" name="_token" value="<?php echo Session::generateCsrfToken(); ?>" autocomplete="off">
     </div>
 </form>

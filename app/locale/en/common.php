@@ -7,6 +7,7 @@ return [
     'Go back' => 'Go back',
     'Login' => 'Login',
     'Password' => 'Password',
+    'Register' => 'Register',
     'This form is outdated. Please go back and submit again.' => 'This form is outdated. Please go back and submit again.',
     'Username, email or mobile' => 'Username, email or mobile',
 ];
