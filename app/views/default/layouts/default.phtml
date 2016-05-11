@@ -2,6 +2,8 @@
 /* @var Phwoolcon\View\Engine\Php $this */
 ?>
 <div id="wrap">
-    <?php echo $this->include('page/messages', []); ?>
+    <?php $this->include('page/header'); ?>
+    <?php $this->include('page/messages'); ?>
     <?php echo $this->getContent(); ?>
+    <?php $this->include('page/footer'); ?>
 </div>

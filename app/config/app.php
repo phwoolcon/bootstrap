@@ -14,6 +14,7 @@ return [
     'timezone' => 'UTC',
     'url' => 'http://localhost',
     'class_aliases' => [
+        'Auth' => 'Phwoolcon\Auth\Auth',
         'Config' => 'Phwoolcon\Config',
         'Log' => 'Phwoolcon\Log',
         'Router' => 'Phwoolcon\Router',

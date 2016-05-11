@@ -1,0 +1,16 @@
+<?php
+/* @var Phwoolcon\View\Engine\Php $this */
+?>
+<header>
+    <nav>
+        <ul>
+            <li><a href="<?php echo url(''); ?>"><?php echo __('Home'); ?></a></li>
+            <?php if (Auth::getInstance()->getUser()) { ?>
+                <li><a href="<?php echo url('account/logout'); ?>"><?php echo __('Logout'); ?></a></li>
+            <?php } else { ?>
+                <li><a href="<?php echo url('account/login'); ?>"><?php echo __('Login'); ?></a></li>
+                <li><a href="<?php echo url('account/register'); ?>"><?php echo __('Register'); ?></a></li>
+            <?php } ?>
+        </ul>
+    </nav>
+</header>

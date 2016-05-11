@@ -27,17 +27,27 @@ $this->prefix('/api', [
         '/' => 'Auth\Controllers\AccountController::getIndex',
         '/login' => 'Auth\Controllers\AccountController::getLogin',
         '/register' => 'Auth\Controllers\AccountController::getRegister',
+        '/logout' => 'Auth\Controllers\AccountController::getLogout',
+        '/redirect' => 'Auth\Controllers\AccountController::getRedirect',
+        '/forgot-password' => 'Auth\Controllers\AccountController::getForgotPassword',
     ],
     'POST' => [
         '/login' => 'Auth\Controllers\AccountController::postLogin',
         '/register' => 'Auth\Controllers\AccountController::postRegister',
+        '/forgot-password' => 'Auth\Controllers\AccountController::postForgotPassword',
     ],
 ]);
 
 return [
     'GET' => [
         '/' => function () {
-            return '<!DOCTYPE html><html><head><title>Phwoolcon Bootstrap</title></head><body><h1 style="margin:100px 0;text-align:center;">Welcome to Phwoolcon</h1></body></html>';
+            return View::make('', 'index', ['page_title' => 'Phwoolcon']);
+        },
+        'terms' => function () {
+            return View::make('', 'terms', ['page_title' => __('Terms of Service') . ' - Phwoolcon']);
+        },
+        'about-us' => function () {
+            return View::make('', 'about-us', ['page_title' => __('About Us') . ' - Phwoolcon']);
         },
     ],
 ];

@@ -1,8 +1,22 @@
 <?php
 return [
+    'Already registered? Click here to login' => 'Already registered? Click here to login',
+    'Confirm password' => 'Confirm password',
+    'Email or mobile' => 'Email or mobile',
     'Forgot password?' => 'Forgot password?',
     'Invalid password' => 'Invalid password',
     'Invalid user credential' => 'Invalid user credential',
+    'Login' => 'Login',
     'Login failed' => 'Login failed',
+    'Login success' => 'Login success',
+    'Logout' => 'Logout',
+    'Logout success' => 'Logout success',
+    'Password' => 'Password',
+    'Please login first' => 'Please login first',
+    'Register' => 'Register',
+    'Register failed' => 'Register failed',
     'Remember Login' => 'Remember Login',
+    'User credential registered' => 'User credential registered',
+    'Username' => 'Username',
+    'Username, email or mobile' => 'Username, email or mobile',
 ];

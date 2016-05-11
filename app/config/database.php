@@ -4,7 +4,7 @@ return [
     'default' => '',
     'connections' => [
         'mysql' => [
-            'adapter'    => 'Mysql',
+            'adapter'    => 'Phwoolcon\Db\Adapter\Pdo\Mysql',
             'host'       => 'localhost',
             'dbname'     => 'dbname',
             'username'   => 'user',
@@ -26,5 +26,9 @@ return [
             'charset'  => 'utf8',
             'schema'   => 'public',
         ],
+    ],
+    'distributed' => [
+        'node_id' => '001',
+        'start_time' => 1362931200,
     ],
 ];

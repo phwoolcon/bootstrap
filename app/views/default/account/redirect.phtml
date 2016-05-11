@@ -1,0 +1,11 @@
+<?php
+/* @var Phwoolcon\View\Engine\Php $this */
+?>
+<h1><?php echo __('Redirecting...'); ?></h1>
+<script>
+    (function (w, config) {
+        setTimeout(function () {
+            w.location.href = config.url;
+        }, config.timeout);
+    })(window, <?php echo json_encode(View::getParam('config')); ?>);
+</script>

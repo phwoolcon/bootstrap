@@ -5,4 +5,10 @@ return [
     'multi_locale' => false,
     'default_locale' => 'zh_CN',
     'detect_client_locale' => false,
+    'verification_patterns' => [
+        'CN' => [
+            'mobile' => '/^1[34578]\d{9}$/',
+            'zip_code' => '/^\d{6}$/',
+        ],
+    ],
 ];
