@@ -19,7 +19,9 @@
     </script>
     <?php View::generateHeadCss(); ?>
     <?php View::generateHeadJs(); ?>
+    <!--[if IE]>
     <?php View::generateIeHack(); ?>
+    <![endif]-->
 </head>
 <body>
 <?php echo $this->getContent(); ?>
