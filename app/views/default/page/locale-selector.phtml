@@ -5,7 +5,7 @@
     $currentLocale = I18n::getCurrentLocale();
     $currentUrl = url($this->request->getURI());
 ?>
-    <div class="locale-selector">
+    <div class="locale-selector col c4">
         <label>
             <span>Language:</span>
             <select id="locale-selector" class="js-only">
@@ -16,7 +16,7 @@
                 <?php } ?>
             </select>
             <noscript>
-                <ul>
+                <ul class="non-list">
                     <?php foreach ($locales as $k => $label) { ?>
                         <li>
                             <?php if ($k != $currentLocale) { ?><a href="<?php echo url('account/redirect', [

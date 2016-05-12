@@ -1,0 +1,11 @@
+.no-js .locale-selector ul, .no-js .locale-selector ul li{
+    display:inline;
+}
+
+.no-js .locale-selector ul li{
+    padding-left:1em;
+}
+
+.no-js .locale-selector ul a{
+    padding-right:0;
+}

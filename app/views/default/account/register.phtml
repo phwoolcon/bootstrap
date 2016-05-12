@@ -2,7 +2,7 @@
 /* @var Phwoolcon\View\Engine\Php $this */
 ?>
 <form id="auth-register-form" method="post" target="_self" action="<?php echo url('account/register'); ?>" accept-charset="UTF-8">
-    <ul>
+    <ul class="non-list">
         <li>
             <label><input type="text" name="register[login]" value="<?php echo Session::getFormData('register_retry.login'); ?>" placeholder="<?php echo __('Email or mobile'); ?>"></label>
         </li>
@@ -13,7 +13,7 @@
             <label><input type="password" name="register[confirm_password]" placeholder="<?php echo __('Confirm password'); ?>"></label>
         </li>
         <li>
-            <button type="submit" class="submit"><span><?php echo __('Register'); ?></span></button>
+            <button type="submit" class="submit btn btn-a smooth btn-sm"><span><?php echo __('Register'); ?></span></button>
         </li>
         <li>
             <label><input type="checkbox" name="register[terms]" <?php if (Session::getFormData('register_retry.terms')) { ?>checked="checked"<?php } ?> value="1"><?php echo __('I have read and agree to the [url]Terms of Service[/url]', ['url' => url('terms')]); ?></label>

@@ -1,3 +1,59 @@
-body{
-    font-size:16px;
+html, body{
+    height:100%;
+}
+
+.msg{
+    margin-top:.5em;
+    padding:.5em;
+}
+
+.msg p{
+    margin:0;
+    padding:.5em;
+}
+
+.nav{
+    line-height:24px;
+    padding:15px 0;
+}
+
+.footer{
+    bottom:0;
+    font-size:14px;
+    height:40px;
+    left:0;
+    line-height:40px;
+    overflow:hidden;
+    padding:15px 0;
+    position:absolute;
+    right:0;
+}
+
+.footer .container{
+    height:100%;
+}
+
+.footer a{
+    color:#aaa;
+    padding-right:1em;
+    position:relative;
+}
+
+.footer,
+.footer a:hover{
+    background:#000;
+    color:#fff;
+}
+
+.footer a{
+    text-decoration:none;
+}
+
+ul.non-list, ul.non-list li{
+    list-style:none;
+    padding:0;
+}
+
+.locale-selector{
+    text-align:right;
 }

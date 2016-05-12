@@ -2,16 +2,16 @@
 /* @var Phwoolcon\View\Engine\Php $this */
 ?>
 <header>
-    <nav>
-        <ul>
-            <li><a href="<?php echo url(''); ?>"><?php echo __('Home'); ?></a></li>
+    <nav class="nav" tabindex="-1" onclick="this.focus()">
+        <div class="container">
+            <a href="<?php echo url(''); ?>" class="page-name"><?php echo __('Home'); ?></a>
             <?php if (Auth::getUser()) { ?>
-                <li><a href="<?php echo url('account'); ?>"><?php echo __('My Account'); ?></a></li>
-                <li><a href="<?php echo url('account/logout'); ?>"><?php echo __('Logout'); ?></a></li>
+                <a href="<?php echo url('account'); ?>"><?php echo __('My Account'); ?></a>
+                <a href="<?php echo url('account/logout'); ?>"><?php echo __('Logout'); ?></a>
             <?php } else { ?>
-                <li><a href="<?php echo url('account/login'); ?>"><?php echo __('Login'); ?></a></li>
-                <li><a href="<?php echo url('account/register'); ?>"><?php echo __('Register'); ?></a></li>
+                <a href="<?php echo url('account/login'); ?>"><?php echo __('Login'); ?></a>
+                <a href="<?php echo url('account/register'); ?>"><?php echo __('Register'); ?></a>
             <?php } ?>
-        </ul>
+        </div>
     </nav>
 </header>

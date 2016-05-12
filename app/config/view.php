@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'debug' => true,
+    'debug' => false,
     'path' => ROOT_PATH . '/app/views/',
     'theme' => 'default',
     'top_level' => 'html',
@@ -10,11 +10,14 @@ return [
     'title_suffix' => 'Phwoolcon',
     'assets' => [
         'head-css' => [
+            '../base/css/normalize-4.1.1.css',
+            '../base/css/mincss.css',
             'css/styles.css',
+            'css/no-js.css',
         ],
         'head-js' => [
-            'http://upcdn.b0.upaiyun.com/libs/jquery/jquery-1.10.2.min.js',
-            'http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js',
+            '../base/js/jquery-1.12.3.min.js',
+            '../base/js/jquery.cookie-1.4.1.min.js',
             '../base/js/phwoolcon.js',
         ],
         'body-js' => [
@@ -24,7 +27,7 @@ return [
             'css/styles.css',
         ],
         'ie-hack-js' => [
-            'js/js.js',
+            '../base/js/html5shiv-3.7.3.min.js',
         ],
     ],
     'admin' => [
@@ -33,11 +36,13 @@ return [
         'layout' => 'default',
         'assets' => [
             'head-css' => [
+                '../base/css/normalize-4.1.1.css',
+                '//cdnjs.cloudflare.com/ajax/libs/min/1.5.0/entireframework.min.css',
                 'css/styles.css',
             ],
             'head-js' => [
-                'http://upcdn.b0.upaiyun.com/libs/jquery/jquery-1.10.2.min.js',
-                'http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js',
+                '../base/js/jquery-1.12.3.min.js',
+                '../base/js/jquery.cookie-1.4.1.min.js',
                 '../../base/js/phwoolcon.js',
             ],
             'body-js' => [
@@ -47,7 +52,7 @@ return [
                 'css/styles.css',
             ],
             'ie-hack-js' => [
-                'js/js.js',
+                '../../base/js/html5shiv-3.7.3.min.js',
             ],
         ],
     ],

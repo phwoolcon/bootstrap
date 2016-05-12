@@ -2,7 +2,7 @@
 /* @var Phwoolcon\View\Engine\Php $this */
 ?>
 <form id="auth-login-form" method="post" target="_self" action="<?php echo url('account/login'); ?>" accept-charset="UTF-8">
-    <ul>
+    <ul class="non-list">
         <li>
             <label><input type="text" name="auth[login]" value="<?php echo Session::getFormData('auth_retry.login'); ?>" placeholder="<?php echo __('Username, email or mobile'); ?>"></label>
         </li>
@@ -10,7 +10,7 @@
             <label><input type="password" name="auth[password]" placeholder="<?php echo __('Password'); ?>"></label>
         </li>
         <li>
-            <button type="submit" class="submit"><span><?php echo __('Login'); ?></span></button>
+            <button type="submit" class="submit btn btn-a smooth btn-sm"><span><?php echo __('Login'); ?></span></button>
         </li>
         <li>
             <label><input type="checkbox" name="auth[remember]" <?php if (Session::getFormData('auth_retry.remember')) { ?>checked="checked"<?php } ?> value="1"><?php echo __('Remember Login'); ?></label>
