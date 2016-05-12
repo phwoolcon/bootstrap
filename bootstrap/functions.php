@@ -112,7 +112,6 @@ function errorHandler($errNo, $errStr, $errFile, $errLine)
 function profilerStart()
 {
     if (isset($_SERVER['ENABLE_PROFILER']) && function_exists('xhprof_enable')) {
-        class_exists('XHProfRuns_Default', false) or include ROOT_PATH . '/app/library/Xhprof/xhprof_lib/utils/xhprof_runs.php';
         xhprof_enable(0, [
             'ignored_functions' => [
                 'call_user_func',
@@ -127,11 +126,12 @@ function profilerStop($type = 'fpm')
     if (isset($_SERVER['ENABLE_PROFILER']) && function_exists('xhprof_enable')) {
         static $profiler;
         static $profilerDir;
+        $data = xhprof_disable();
         $profilerDir || is_dir($profilerDir = storagePath('profiler')) or mkdir($profilerDir, 0777, true);
         $pathInfo = strtr($_SERVER['REQUEST_URI'], ['/' => '|']);
         $microTime = explode(' ', microtime());
         $reportFile = $microTime[1] . '-' . substr($microTime[0], 2) . '-' . $_SERVER['REQUEST_METHOD'] . $pathInfo;
         $profiler or $profiler = new XHProfRuns_Default($profilerDir);
-        $profiler->save_run(xhprof_disable(), $type, $reportFile);
+        $profiler->save_run($data, $type, $reportFile);
     }
 }
