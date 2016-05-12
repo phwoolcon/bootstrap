@@ -11,11 +11,11 @@ return [
          * CSRF protection token lifetime, in seconds.
          */
         'csrf_token_lifetime' => 3600,
-        'cookie_name' => 'phwoolcon',
-        'cookie_path' => '/',
-        'cookie_domain' => null,
-        'cookie_secure' => false,
-        'cookie_http_only' => true,
+        'cookies' => [
+            'name' => 'phwoolcon',
+            'secure' => false,
+            'http_only' => true,
+        ],
         /**
          * Without lazy renew, the session cookie will be set on every request,
          * which is meaningless to just renew the cookie's expiration time.

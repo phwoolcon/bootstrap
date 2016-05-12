@@ -13,10 +13,12 @@ return [
             'css/styles.css',
         ],
         'head-js' => [
-            'js/js.js',
+            'http://upcdn.b0.upaiyun.com/libs/jquery/jquery-1.10.2.min.js',
+            'http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js',
+            '../base/js/phwoolcon.js',
         ],
         'body-js' => [
-            'js/js.js',
+            '../base/js/body-js.js',
         ],
         'ie-hack-css' => [
             'css/styles.css',
@@ -34,10 +36,12 @@ return [
                 'css/styles.css',
             ],
             'head-js' => [
-                'js/js.js',
+                'http://upcdn.b0.upaiyun.com/libs/jquery/jquery-1.10.2.min.js',
+                'http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js',
+                '../../base/js/phwoolcon.js',
             ],
             'body-js' => [
-                'js/js.js',
+                '../../base/js/body-js.js',
             ],
             'ie-hack-css' => [
                 'css/styles.css',
@@ -52,6 +56,7 @@ return [
             'base_path' => ROOT_PATH . '/public',
             'assets_dir' => 'assets',
             'cache_assets' => true,
+            'apply_filter' => true,
         ],
     ],
     'engines' => [

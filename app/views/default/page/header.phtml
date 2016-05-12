@@ -5,7 +5,8 @@
     <nav>
         <ul>
             <li><a href="<?php echo url(''); ?>"><?php echo __('Home'); ?></a></li>
-            <?php if (Auth::getInstance()->getUser()) { ?>
+            <?php if (Auth::getUser()) { ?>
+                <li><a href="<?php echo url('account'); ?>"><?php echo __('My Account'); ?></a></li>
                 <li><a href="<?php echo url('account/logout'); ?>"><?php echo __('Logout'); ?></a></li>
             <?php } else { ?>
                 <li><a href="<?php echo url('account/login'); ?>"><?php echo __('Login'); ?></a></li>

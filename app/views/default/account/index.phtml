@@ -1,0 +1,25 @@
+<?php
+/* @var Phwoolcon\View\Engine\Php $this */
+?>
+<?php if ($user = Auth::getUser()) { ?>
+    <div>
+        <ul>
+            <li>
+                <label><?php echo __('ID'); ?></label>
+                <span><?php echo $user->getId(); ?></span>
+            </li>
+            <li>
+                <label><?php echo __('Username'); ?></label>
+                <span><?php echo $user->getData('username') ?: __('Not set'); ?></span>
+            </li>
+            <li>
+                <label><?php echo __('Email'); ?></label>
+                <span><?php echo $user->getData('email') ?: __('Not set'); ?></span>
+            </li>
+            <li>
+                <label><?php echo __('Mobile'); ?></label>
+                <span><?php echo $user->getData('mobile') ?: __('Not set'); ?></span>
+            </li>
+        </ul>
+    </div>
+<?php } ?>

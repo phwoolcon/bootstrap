@@ -2,8 +2,12 @@
 return [
     'locale_path' => ROOT_PATH . '/app/locale',
     'cache_locale' => true,
-    'multi_locale' => false,
+    'multi_locale' => true,
     'default_locale' => 'zh_CN',
+    'available_locales' => [
+        'en' => 'English',
+        'zh_CN' => '简体中文',
+    ],
     'detect_client_locale' => false,
     'verification_patterns' => [
         'CN' => [

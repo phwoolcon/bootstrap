@@ -8,6 +8,7 @@ return [
     'Go back' => '返回',
     'Home' => '首页',
     'I have read and agree to the [url]Terms of Service[/url]' => '我已阅读并同意 <a href="%url%" target="_blank">服务条款</a>',
+    'Not set' => '未设置',
     'Redirecting' => '正在跳转',
     'Redirecting...' => '正在跳转…',
     'Submit' => '提交',

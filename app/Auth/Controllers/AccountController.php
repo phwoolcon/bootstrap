@@ -13,7 +13,7 @@ class AccountController extends Controller
 
     protected function checkLoggedInUser()
     {
-        return Auth::getInstance()->getUser();
+        return Auth::getUser();
     }
 
     public function getForgotPassword()
@@ -29,6 +29,7 @@ class AccountController extends Controller
             $this->redirect('account/login');
             return;
         }
+        $this->addPageTitle(__('My Account'));
         $this->render('account', 'index');
     }
 
@@ -51,10 +52,17 @@ class AccountController extends Controller
     {
         $this->rememberRedirectUrl();
         $this->addPageTitle(__('Redirecting'));
-        $this->render('account', 'redirect', ['config' => [
-            'url' => $this->session->get('redirect_url', url('account'), true),
-            'timeout' => Auth::getOption('redirect_timeout') * 1000,
-        ]]);
+        $url = $this->session->get('redirect_url', url('account'), true);
+        if ($this->request->get('_immediately')) {
+            $this->redirect($url);
+        } else {
+            $this->render('account', 'redirect', [
+                'config' => [
+                    'url' => $url,
+                    'timeout' => Auth::getOption('redirect_timeout') * 1000,
+                ]
+            ]);
+        }
     }
 
     public function getRegister()
@@ -94,8 +102,12 @@ class AccountController extends Controller
         try {
             $user = Auth::getInstance()->register($credential);
             $this->session->clearFormData('register_retry');
-            if ($user->getData('confirmed'))
-            return $this->redirect($this->session->get('redirect_url', url('account'), true));
+            if ($user->getData('confirmed')) {
+                $this->flashSession->success(__('Register success'));
+                return $this->redirect(url('account/redirect'));
+            }
+            $this->flashSession->success(__('Register success, but confirmation required'));
+            return $this->redirect(url('account/confirm'));
         } catch (AuthException $e) {
             $this->flashSession->error($e->getMessage());
         } catch (\Exception $e) {
