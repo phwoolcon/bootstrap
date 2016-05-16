@@ -20,6 +20,11 @@ a{
     padding:.5em;
 }
 
+.msg-error{
+    background:#fbb;
+    border-left:5px solid #d55;
+}
+
 .nav{
     line-height:24px;
     padding:15px 0;
