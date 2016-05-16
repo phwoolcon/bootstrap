@@ -24,10 +24,13 @@ return [
             '../base/js/body-js.js',
         ],
         'ie-hack-css' => [
-            'css/styles.css',
+            '../base/css/ie-hack.css',
         ],
         'ie-hack-js' => [
             '../base/js/html5shiv-3.7.3.min.js',
+            '../base/js/jquery.placeholder-2.3.1.js',
+            '../base/js/respond-1.4.2.js',
+            '../base/js/ie-hack.js',
         ],
     ],
     'admin' => [
@@ -41,18 +44,21 @@ return [
                 'css/styles.css',
             ],
             'head-js' => [
-                '../base/js/jquery-1.12.3.min.js',
-                '../base/js/jquery.cookie-1.4.1.min.js',
+                '../../base/js/jquery-1.12.3.min.js',
+                '../../base/js/jquery.cookie-1.4.1.min.js',
                 '../../base/js/phwoolcon.js',
             ],
             'body-js' => [
                 '../../base/js/body-js.js',
             ],
             'ie-hack-css' => [
-                'css/styles.css',
+                '../../base/css/ie-hack.css',
             ],
             'ie-hack-js' => [
                 '../../base/js/html5shiv-3.7.3.min.js',
+                '../../base/js/jquery.placeholder-2.3.1.js',
+                '../../base/js/respond-1.4.2.js',
+                '../../base/js/ie-hack.js',
             ],
         ],
     ],
