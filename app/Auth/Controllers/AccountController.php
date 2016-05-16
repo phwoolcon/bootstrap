@@ -2,6 +2,7 @@
 
 namespace Auth\Controllers;
 
+use User;
 use Phwoolcon\Auth\Adapter\Exception as AuthException;
 use Phwoolcon\Auth\Auth;
 use Phwoolcon\Controller;
@@ -14,6 +15,32 @@ class AccountController extends Controller
     protected function checkLoggedInUser()
     {
         return Auth::getUser();
+    }
+
+    public function getActivate()
+    {
+        if (!$user = Auth::getInstance()->activatePendingConfirmationUser($this->input('auth.confirm'))) {
+            $this->render('page', 'single-message', ['message' => __('Account Confirmation Failed')]);
+            return;
+        }
+        $this->flashSession->success(__('Account Activated Successfully'));
+        $this->redirect('account/redirect');
+    }
+
+    public function getConfirm()
+    {
+        if (!($userData = Auth::getInstance()->getPendingConfirmationData()) ||
+            !($uid = fnGet($userData, 'id')) ||
+            User::findFirstSimple(['id' => $uid])
+        ) {
+            $this->flashSession->error(__('Account Confirmation Failed'));
+            $this->redirect('account/redirect');
+            return;
+        }
+        $this->addPageTitle(__('Account Confirmation'));
+        $this->render('account', 'confirm', [
+            'user_data' => $userData,
+        ]);
     }
 
     public function getForgotPassword()

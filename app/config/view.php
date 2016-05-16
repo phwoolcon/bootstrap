@@ -39,8 +39,8 @@ return [
         'layout' => 'default',
         'assets' => [
             'head-css' => [
-                '../base/css/normalize-4.1.1.css',
-                '//cdnjs.cloudflare.com/ajax/libs/min/1.5.0/entireframework.min.css',
+                '../../base/css/normalize-4.1.1.css',
+                '../../base/css/mincss.css',
                 'css/styles.css',
             ],
             'head-js' => [

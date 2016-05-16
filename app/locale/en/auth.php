@@ -1,7 +1,11 @@
 <?php
 return [
+    'Account Activated Successfully' => 'Account Activated Successfully',
+    'Account Confirmation' => 'Account Confirmation',
+    'Account Confirmation Failed' => 'Account Confirmation Failed',
     'Already registered? Click here to login' => 'Already registered? Click here to login',
     'Confirm password' => 'Confirm password',
+    'Confirmation Code' => 'Confirmation Code',
     'Email' => 'Email',
     'Email or mobile' => 'Email or mobile',
     'Forgot password?' => 'Forgot password?',

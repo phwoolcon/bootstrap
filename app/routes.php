@@ -29,6 +29,8 @@ $this->prefix('/api', [
         '/register' => 'Auth\Controllers\AccountController::getRegister',
         '/logout' => 'Auth\Controllers\AccountController::getLogout',
         '/redirect' => 'Auth\Controllers\AccountController::getRedirect',
+        '/confirm' => 'Auth\Controllers\AccountController::getConfirm',
+        '/activate' => 'Auth\Controllers\AccountController::getActivate',
         '/forgot-password' => 'Auth\Controllers\AccountController::getForgotPassword',
     ],
     'POST' => [

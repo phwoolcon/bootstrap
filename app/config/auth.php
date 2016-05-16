@@ -23,6 +23,7 @@ return [
         'register' => [
             'confirm_mobile' => false,
             'confirm_email' => false,
+            'confirmation_code_ttl' => 604800,
         ],
         'redirect_timeout' => 2,
     ],

@@ -1,12 +1,16 @@
 <?php
 return [
+    'Account Activated Successfully' => '帐号激活成功',
+    'Account Confirmation' => '帐号确认',
+    'Account Confirmation Failed' => '确认失败',
     'Already registered? Click here to login' => '已有帐号？点击这里登录',
     'Confirm password' => '确认密码',
+    'Confirmation Code' => '验证码',
     'Email' => '邮箱',
     'Email or mobile' => '邮箱或手机',
     'Forgot password?' => '忘记密码？',
     'Invalid password' => '密码不正确',
-    'Invalid user credential' => '用户登录信息无效',
+    'Invalid user credential' => '帐号信息无效',
     'Login' => '登录',
     'Login failed' => '登录失败',
     'Login success' => '登录成功',

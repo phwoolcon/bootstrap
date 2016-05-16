@@ -1,0 +1,7 @@
+<?php
+/* @var Phwoolcon\View\Engine\Php $this */
+?>
+<h1><?php echo View::getParam('message'); ?></h1>
+<?php if ($details = View::getParam('details')) { ?>
+    <p><?php echo $details; ?></p>
+<?php } ?>
