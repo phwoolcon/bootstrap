@@ -6,30 +6,24 @@
     $currentUrl = url($this->request->getURI());
 ?>
     <div class="locale-selector col c4">
-        <label>
-            <span>Language:</span>
-            <select id="locale-selector" class="js-only">
-                <?php foreach ($locales as $k => $label) { ?>
-                    <option value="<?php echo $k ?>" <?php if ($k == $currentLocale) { ?>selected="selected"<?php } ?>>
-                        <?php echo $label; ?>
-                    </option>
-                <?php } ?>
-            </select>
-            <noscript>
-                <ul class="non-list">
+        <form action="<?php echo url('account/redirect'); ?>" method="get" target="_self">
+            <label>
+                <span>Language:</span>
+                <select id="locale-selector" name="_locale">
                     <?php foreach ($locales as $k => $label) { ?>
-                        <li>
-                            <?php if ($k != $currentLocale) { ?><a href="<?php echo url('account/redirect', [
-                                'redirect_url' => $currentUrl,
-                                '_locale' => $k,
-                                '_immediately' => true,
-                            ]); ?>"><?php } ?>
+                        <option value="<?php echo $k ?>" <?php if ($k == $currentLocale) { ?>selected="selected"<?php } ?>>
                             <?php echo $label; ?>
-                            <?php if ($k != $currentLocale) { ?></a><?php } ?>
-                        </li>
+                        </option>
                     <?php } ?>
-                </ul>
-            </noscript>
-        </label>
+                </select>
+                <noscript>
+                    <button type="submit" class="submit btn btn-c smooth btn-sm"><span>&#10003;</span></button>
+                </noscript>
+            </label>
+            <div class="hidden">
+                <input type="hidden" name="_immediately" value="1">
+                <input type="hidden" name="redirect_url" value="<?php echo $currentUrl; ?>">
+            </div>
+        </form>
     </div>
 <?php } ?>

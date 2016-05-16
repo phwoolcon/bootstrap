@@ -2,6 +2,14 @@ html, body{
     height:100%;
 }
 
+body{
+    color:#333;
+}
+
+a{
+    color:#369;
+}
+
 .msg{
     margin-top:.5em;
     padding:.5em;
@@ -49,6 +57,11 @@ html, body{
     text-decoration:none;
 }
 
+.footer .btn{
+    padding-bottom:0;
+    padding-top:0;
+}
+
 ul.non-list, ul.non-list li{
     list-style:none;
     padding:0;
@@ -56,4 +69,19 @@ ul.non-list, ul.non-list li{
 
 .locale-selector{
     text-align:right;
+}
+
+.btn-d{
+    background:#369;
+}
+
+.btn-d:hover{
+    background:#258;
+    /* darken(@btn-d-bg, 5%) */
+}
+
+.btn-d:active,
+.btn-d:focus{
+    background:#147;
+    /* darken(@btn-d-bg, 10%) */
 }
