@@ -9,6 +9,10 @@ return [
             'password_field' => 'password',
         ],
         'session_key' => 'front',
+        'remember_login' => [
+            'cookie_key' => 'remember',
+            'ttl' => 604800,
+        ],
         'uid_key' => 'id',
         'security' => [
             'default_hash' => Phalcon\Security::CRYPT_BLOWFISH_Y,
