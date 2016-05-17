@@ -78,8 +78,7 @@ return [
                 new Column('real_name', [
                     'type' => Column::TYPE_VARCHAR,
                     'size' => 32,
-                    'notNull' => true,
-                    'default' => '',
+                    'notNull' => false,
                 ]),
                 new Column('avatar', [
                     'type' => Column::TYPE_VARCHAR,
@@ -87,21 +86,23 @@ return [
                     'notNull' => true,
                     'default' => '',
                 ]),
-                new Column('confirmation_code', [
-                    'type' => Column::TYPE_VARCHAR,
-                    'size' => 32,
-                    'notNull' => true,
-                    'default' => '',
-                ]),
                 new Column('remember_token', [
                     'type' => Column::TYPE_VARCHAR,
-                    'size' => 32,
-                    'notNull' => true,
-                    'default' => '',
+                    'size' => 52,
+                    'notNull' => false,
                 ]),
                 new Column('extra_data', [
                     'type' => Column::TYPE_TEXT,
                     'notNull' => false,
+                ]),
+            ],
+            'references' => [
+                new Reference('user_profile_users_user_id', [
+                    'referencedTable' => 'users',
+                    'columns' => ['user_id'],
+                    'referencedColumns' => ['id'],
+                    'onDelete' => 'CASCADE',
+                    'onUpdate' => 'CASCADE',
                 ]),
             ],
             'options' => [
@@ -110,7 +111,7 @@ return [
         ]);
     },
     'down' => function (Adapter $db, Migrate $migrate) {
-        $db->tableExists('users') and $db->dropTable('users');
         $db->tableExists('user_profile') and $db->dropTable('user_profile');
+        $db->tableExists('users') and $db->dropTable('users');
     },
 ];
