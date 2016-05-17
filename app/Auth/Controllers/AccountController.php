@@ -127,6 +127,9 @@ class AccountController extends Controller
         $this->rememberRedirectUrl();
         $credential = $this->request->getPost('register');
         try {
+            if (!$this->request->getPost('terms')) {
+                throw new AuthException(__('Please agree to Terms of Service'));
+            }
             $user = Auth::getInstance()->register($credential);
             $this->session->clearFormData('register_retry');
             if ($user->getData('confirmed')) {

@@ -16,7 +16,7 @@
             <button type="submit" class="submit btn btn-d smooth btn-sm"><span><?php echo __('Register'); ?></span></button>
         </li>
         <li>
-            <label><input type="checkbox" name="register[terms]" <?php if (Session::getFormData('register_retry.terms')) { ?>checked="checked"<?php } ?> value="1"><?php echo __('I have read and agree to the [url]Terms of Service[/url]', ['url' => url('terms')]); ?></label>
+            <label><input type="checkbox" name="terms" <?php if (Session::getFormData('register_retry.terms')) { ?>checked="checked"<?php } ?> value="1"><?php echo __('I have read and agree to the [url]Terms of Service[/url]', ['url' => url('terms')]); ?></label>
         </li>
         <li>
             <a href="<?php echo url('account/login'); ?>" class="login"><?php echo __('Already registered? Click here to login'); ?></a>

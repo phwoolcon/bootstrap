@@ -8,7 +8,7 @@ $userData = View::getParam('user_data');
             <label><?php echo fnGet($userData, 'login')?></label>
         </li>
         <li>
-            <label><input type="text" name="auth[confirm]" placeholder="<?php echo __('Confirmation Code'); ?>"></label>
+            <label><input type="text" name="auth[confirm]" placeholder="<?php echo __('Confirmation Code'); ?>" autocomplete="off"></label>
         </li>
         <li>
             <button type="submit" class="submit"><span><?php echo __('Submit'); ?></span></button>
