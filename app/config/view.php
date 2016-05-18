@@ -14,6 +14,7 @@ return [
             '../base/css/mincss.css',
             'css/styles.css',
             'css/no-js.css',
+            '../base/css/font-pt-sans.css',
         ],
         'head-js' => [
             '../base/js/jquery-1.12.3.min.js',
