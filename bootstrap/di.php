@@ -12,6 +12,7 @@ use Phwoolcon\Log;
 use Phwoolcon\Router;
 use Phwoolcon\Session;
 use Phwoolcon\View;
+use Phwoolcon\Queue;
 use Phwoolcon\Auth\Auth;
 
 if (!extension_loaded('phalcon')) {
@@ -57,6 +58,7 @@ Cookies::register($di);
 Session::register($di);
 View::register($di);
 Auth::register($di);
+Queue::register($di);
 
 $loader->registerNamespaces(Config::get('app.autoload.namespaces'), true);
 
