@@ -16,8 +16,10 @@ return [
     'class_aliases' => [
         'Auth' => 'Phwoolcon\Auth\Auth',
         'Config' => 'Phwoolcon\Config',
+        'Db' => 'Phwoolcon\Db',
         'I18n' => 'Phwoolcon\I18n',
         'Log' => 'Phwoolcon\Log',
+        'Queue' => 'Phwoolcon\Queue',
         'Router' => 'Phwoolcon\Router',
         'Session' => 'Phwoolcon\Session',
         'View' => 'Phwoolcon\View',
