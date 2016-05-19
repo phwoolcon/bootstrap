@@ -18,7 +18,7 @@ return [
         ],
 
         'pgsql' => [
-            'adapter'  => 'Postgresql',
+            'adapter'  => 'Phalcon\Db\Adapter\Pdo\Postgresql',
             'host'     => 'localhost',
             'dbname'   => 'dbname',
             'username' => 'user',

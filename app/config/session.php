@@ -26,18 +26,18 @@ return [
     ],
     'drivers' => [
         'native' => [
-            'adapter' => 'Native',
+            'adapter' => 'Phwoolcon\Session\Adapter\Native',
             'options' => [
                 'save_path' => storagePath('session'),
             ],
         ],
         'redis' => [
-            'adapter' => 'Redis',
+            'adapter' => 'Phwoolcon\Session\Adapter\Redis',
             'options' => [
             ],
         ],
         'memcached' => [
-            'adapter' => 'Memcached',
+            'adapter' => 'Phwoolcon\Session\Adapter\Memcached',
             'options' => [
             ],
         ],

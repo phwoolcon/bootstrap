@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adapter' => 'Generic',
+    'adapter' => 'Phwoolcon\Auth\Adapter\Generic',
     'options' => [
         'user_model' => 'Phwoolcon\Model\User',
         'user_fields' => [
