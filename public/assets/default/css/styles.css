@@ -1,6 +1,7 @@
-html, body{
-    height:100%;
+html{
+    min-height:100%;
     font-family:'PT Sans', 'Hiragino Sans GB', 'Microsoft YaHei', '\5FAE\8F6F\96C5\9ED1', sans-serif;
+    position:relative;
 }
 
 body{
@@ -9,6 +10,10 @@ body{
 
 a{
     color:#369;
+}
+
+.hidden{
+    display:none;
 }
 
 .msg{
@@ -31,20 +36,35 @@ a{
     padding:15px 0;
 }
 
+@media (max-width:500px){
+    nav.active{
+        height:auto;
+    }
+}
+
+.body{
+    padding-bottom:60px;
+}
+
 .footer{
     bottom:0;
     font-size:14px;
-    height:40px;
+    height:60px;
     left:0;
-    line-height:40px;
-    overflow:hidden;
-    padding:15px 0;
     position:absolute;
     right:0;
 }
 
-.footer .container{
-    height:100%;
+.footer .col{
+    line-height:60px;
+}
+
+.footer .row, .footer form > *{
+    margin:0;
+}
+
+.footer form label span, form input[type=checkbox]{
+    margin-right:.5em;
 }
 
 .footer a{
@@ -66,6 +86,20 @@ a{
 .footer .btn{
     padding-bottom:0;
     padding-top:0;
+}
+
+@media (max-width:870px){
+    .body{
+        padding-bottom:120px;
+    }
+
+    .footer{
+        height:120px;
+    }
+
+    .footer .col{
+        text-align:center;
+    }
 }
 
 ul.non-list, ul.non-list li{
