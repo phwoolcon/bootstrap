@@ -6,13 +6,13 @@
     $currentUrl = url($this->request->getURI());
 ?>
     <div class="locale-selector col c4">
-        <form action="<?php echo url('account/redirect'); ?>" method="get" target="_self">
+        <form action="<?= url('account/redirect'); ?>" method="get" target="_self">
             <label>
                 <span>Language:</span>
                 <select id="locale-selector" name="_locale">
                     <?php foreach ($locales as $k => $label) { ?>
-                        <option value="<?php echo $k ?>" <?php if ($k == $currentLocale) { ?>selected="selected"<?php } ?>>
-                            <?php echo $label; ?>
+                        <option value="<?= $k ?>" <?php if ($k == $currentLocale) { ?>selected="selected"<?php } ?>>
+                            <?= $label; ?>
                         </option>
                     <?php } ?>
                 </select>
@@ -22,7 +22,7 @@
             </label>
             <div class="hidden">
                 <input type="hidden" name="_immediately" value="1">
-                <input type="hidden" name="redirect_url" value="<?php echo $currentUrl; ?>">
+                <input type="hidden" name="redirect_url" value="<?= $currentUrl; ?>">
             </div>
         </form>
     </div>

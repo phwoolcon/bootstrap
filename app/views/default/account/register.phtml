@@ -1,28 +1,28 @@
 <?php
 /* @var Phwoolcon\View\Engine\Php $this */
 ?>
-<form id="auth-register-form" method="post" target="_self" action="<?php echo url('account/register'); ?>" accept-charset="UTF-8">
+<form id="auth-register-form" method="post" target="_self" action="<?= url('account/register'); ?>" accept-charset="UTF-8">
     <ul class="non-list">
         <li>
-            <label><input type="text" name="register[login]" value="<?php echo Session::getFormData('register_retry.login'); ?>" placeholder="<?php echo __('Email or mobile'); ?>"></label>
+            <label><input type="text" name="register[login]" value="<?= Session::getFormData('register_retry.login'); ?>" placeholder="<?= __('Email or mobile'); ?>"></label>
         </li>
         <li>
-            <label><input type="password" name="register[password]" placeholder="<?php echo __('Password'); ?>"></label>
+            <label><input type="password" name="register[password]" placeholder="<?= __('Password'); ?>"></label>
         </li>
         <li>
-            <label><input type="password" name="register[confirm_password]" placeholder="<?php echo __('Confirm password'); ?>"></label>
+            <label><input type="password" name="register[confirm_password]" placeholder="<?= __('Confirm password'); ?>"></label>
         </li>
         <li>
-            <button type="submit" class="submit btn btn-d smooth btn-sm"><span><?php echo __('Register'); ?></span></button>
+            <button type="submit" class="submit btn btn-d smooth btn-sm"><span><?= __('Register'); ?></span></button>
         </li>
         <li>
-            <label><input type="checkbox" name="terms" <?php if (Session::getFormData('register_retry.terms')) { ?>checked="checked"<?php } ?> value="1"><?php echo __('I have read and agree to the [url]Terms of Service[/url]', ['url' => url('terms')]); ?></label>
+            <label><input type="checkbox" name="terms" <?php if (Session::getFormData('register_retry.terms')) { ?>checked="checked"<?php } ?> value="1"><?= __('I have read and agree to the [url]Terms of Service[/url]', ['url' => url('terms')]); ?></label>
         </li>
         <li>
-            <a href="<?php echo url('account/login'); ?>" class="login"><?php echo __('Already registered? Click here to login'); ?></a>
+            <a href="<?= url('account/login'); ?>" class="login"><?= __('Already registered? Click here to login'); ?></a>
         </li>
     </ul>
     <div class="hidden">
-        <input type="hidden" name="_token" value="<?php echo Session::getCsrfToken(true); ?>" autocomplete="off">
+        <input type="hidden" name="_token" value="<?= Session::getCsrfToken(true); ?>" autocomplete="off">
     </div>
 </form>

@@ -5,20 +5,20 @@
     <div>
         <ul class="non-list">
             <li>
-                <label><?php echo __('ID'); ?></label>
-                <span><?php echo $user->getId(); ?></span>
+                <label><?= __('ID'); ?></label>
+                <span><?= $user->getId(); ?></span>
             </li>
             <li>
-                <label><?php echo __('Username'); ?></label>
-                <span><?php echo $user->getData('username') ?: __('Not set'); ?></span>
+                <label><?= __('Username'); ?></label>
+                <span><?= $user->getData('username') ?: __('Not set'); ?></span>
             </li>
             <li>
-                <label><?php echo __('Email'); ?></label>
-                <span><?php echo $user->getData('email') ?: __('Not set'); ?></span>
+                <label><?= __('Email'); ?></label>
+                <span><?= $user->getData('email') ?: __('Not set'); ?></span>
             </li>
             <li>
-                <label><?php echo __('Mobile'); ?></label>
-                <span><?php echo $user->getData('mobile') ?: __('Not set'); ?></span>
+                <label><?= __('Mobile'); ?></label>
+                <span><?= $user->getData('mobile') ?: __('Not set'); ?></span>
             </li>
         </ul>
     </div>

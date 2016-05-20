@@ -2,23 +2,23 @@
 /* @var Phwoolcon\View\Engine\Php $this */
 $userData = View::getParam('user_data');
 ?>
-<form id="auth-confirm-form" method="get" target="_self" action="<?php echo url('account/activate'); ?>" accept-charset="UTF-8">
+<form id="auth-confirm-form" method="get" target="_self" action="<?= url('account/activate'); ?>" accept-charset="UTF-8">
     <ul class="non-list">
         <li>
-            <label><?php echo fnGet($userData, 'login')?></label>
+            <label><?= fnGet($userData, 'login')?></label>
         </li>
         <li>
-            <label><input type="text" name="auth[confirm]" placeholder="<?php echo __('Confirmation Code'); ?>" autocomplete="off"></label>
+            <label><input type="text" name="auth[confirm]" placeholder="<?= __('Confirmation Code'); ?>" autocomplete="off"></label>
         </li>
         <li>
-            <button type="submit" class="submit"><span><?php echo __('Submit'); ?></span></button>
+            <button type="submit" class="submit"><span><?= __('Submit'); ?></span></button>
         </li>
         <li>
-            <a href="<?php echo url('account/login'); ?>" class="register"><?php echo __('Login'); ?></a>
-            <a href="<?php echo url('account/register'); ?>" class="register"><?php echo __('Register'); ?></a>
+            <a href="<?= url('account/login'); ?>" class="register"><?= __('Login'); ?></a>
+            <a href="<?= url('account/register'); ?>" class="register"><?= __('Register'); ?></a>
         </li>
     </ul>
     <div class="hidden">
-        <input type="hidden" name="uid" value="<?php echo fnGet($userData, 'id'); ?>" autocomplete="off">
+        <input type="hidden" name="uid" value="<?= fnGet($userData, 'id'); ?>" autocomplete="off">
     </div>
 </form>

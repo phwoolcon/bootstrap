@@ -3,13 +3,15 @@
 ?>
 <footer>
     <div class="footer">
-        <div class="container">
-            <div class="col c8">
-                <a>&copy; 2016 Phwoolcon</a>
-                <a href="<?php echo url('about-us'); ?>"><?php echo __('About Us'); ?></a>
-                <a href="<?php echo url('terms'); ?>"><?php echo __('Terms of Service'); ?></a>
+        <div class="row">
+            <div class="container">
+                <div class="col c8">
+                    <a>&copy; 2016 Phwoolcon</a>
+                    <a href="<?= url('about-us'); ?>"><?= __('About Us'); ?></a>
+                    <a href="<?= url('terms'); ?>"><?= __('Terms of Service'); ?></a>
+                </div>
+                <?php $this->include('page/locale-selector'); ?>
             </div>
-            <?php $this->include('page/locale-selector'); ?>
         </div>
     </div>
 </footer>

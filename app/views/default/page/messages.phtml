@@ -4,9 +4,9 @@
 
 <div class="container">
 <?php if (is_array($data = $this->flashSession->getMessages())) foreach ($data as $type => $messages) { ?>
-    <div class="msg msg-<?php echo $type; ?>">
+    <div class="msg msg-<?= $type; ?>">
         <?php foreach ($messages as $message) { ?>
-        <p><?php echo $message; ?></p>
+        <p><?= $message; ?></p>
         <?php } ?>
     </div>
 <?php } ?>

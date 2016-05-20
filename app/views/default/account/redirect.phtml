@@ -4,14 +4,14 @@
 <?php
 $config = View::getParam('config');
 ?>
-<h1><?php echo __('Redirecting...'); ?></h1>
+<h1><?= __('Redirecting...'); ?></h1>
 <script>
     (function (w, config) {
         setTimeout(function () {
             w.location.href = config.url;
         }, config.timeout);
-    })(window, <?php echo json_encode($config); ?>);
+    })(window, <?= json_encode($config); ?>);
 </script>
 <noscript>
-    <meta http-equiv="refresh" content="<?php echo $config['timeout'] / 1000; ?>;URL=<?php echo $config['url']; ?>">
+    <meta http-equiv="refresh" content="<?= $config['timeout'] / 1000; ?>;URL=<?= $config['url']; ?>">
 </noscript>
