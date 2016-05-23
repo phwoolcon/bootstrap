@@ -22,6 +22,9 @@
         ]
     },
     "scripts": {
+        "post-install-cmd": [
+            "bin/install/generate-cookie-encrypt-key"
+        ],
         "post-autoload-dump": [
             "bin/convert-autoload",
             "bin/cli clear:cache -c"

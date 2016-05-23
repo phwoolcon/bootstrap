@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+error_reporting(-1);
+
+$source = __DIR__ . '/config/production/cookies.php';
+$target = dirname(dirname(__DIR__)) . '/app/config/production/cookies.php';
+$search = 'ENCRYPT_KEY';
+if (is_file($target)) {
+    $config = include $target;
+    if ($config['encrypt_key'] != $search) {
+        return;
+    }
+    $content = file_get_contents($target);
+} else {
+    $content = file_get_contents($source);
+}
+$length = 32;
+$key = substr(str_replace(['/', '+', '='], '', base64_encode(openssl_random_pseudo_bytes($length * 2))), 0, $length);
+$content = str_replace($search, $key, $content);
+file_put_contents($target, $content);
+echo "Cookie encrypt key [{$key}] set successfully.", PHP_EOL;
