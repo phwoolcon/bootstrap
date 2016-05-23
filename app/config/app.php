@@ -13,6 +13,7 @@ return [
     ],
     'timezone' => 'UTC',
     'url' => 'http://localhost',
+    'site_path' => '',
     'class_aliases' => [
         'Auth' => 'Phwoolcon\Auth\Auth',
         'Config' => 'Phwoolcon\Config',
