@@ -1,6 +1,11 @@
 <?php
 /* @var Phwoolcon\View\Engine\Php $this */
 ?>
+<?php
+if (View::noHeader()) {
+    return;
+}
+?>
 <footer>
     <div class="footer">
         <div class="row">
