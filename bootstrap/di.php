@@ -7,6 +7,7 @@ use Phwoolcon\Cache;
 use Phwoolcon\Config;
 use Phwoolcon\Cookies;
 use Phwoolcon\Db;
+use Phwoolcon\Events;
 use Phwoolcon\I18n;
 use Phwoolcon\Log;
 use Phwoolcon\Router;
@@ -47,6 +48,7 @@ $loader->registerClasses(include ROOT_PATH . '/vendor/composer/autoload_classmap
 $di->setShared('loader', $loader);
 
 // Register components
+Events::register($di);
 Db::register($di);
 Cache::register($di);
 Log::register($di);
