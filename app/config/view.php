@@ -19,6 +19,7 @@ return [
         'head-js' => [
             '../base/js/jquery-1.12.3.min.js',
             '../base/js/jquery.cookie-1.4.1.min.js',
+            '../base/js/simpleStorage-0.2.1.min.js',
             '../base/js/phwoolcon.js',
         ],
         'body-js' => [
@@ -34,6 +35,9 @@ return [
             '../base/js/ie/json2-20160501.js',
             '../base/js/ie/ie-hack.js',
         ],
+        'sso-js' => [
+            '../base/js/sso.js',
+        ],
     ],
     'admin' => [
         'title_suffix' => 'Admin',
@@ -48,6 +52,7 @@ return [
             'head-js' => [
                 '../../base/js/jquery-1.12.3.min.js',
                 '../../base/js/jquery.cookie-1.4.1.min.js',
+                '../../base/js/ie/simpleStorage-0.2.1.min.js',
                 '../../base/js/phwoolcon.js',
             ],
             'body-js' => [
