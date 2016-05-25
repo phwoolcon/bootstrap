@@ -87,6 +87,9 @@ class AccountController extends Controller
                 'config' => [
                     'url' => $url,
                     'timeout' => Auth::getOption('redirect_timeout') * 1000,
+                    'uid' => Auth::getUser() ? Auth::getUser()->getId() : null,
+                    // TODO Use session TTL instead of 0
+                    'uidTtl' => Auth::getUser() ? 0 : 0,
                 ]
             ]);
         }

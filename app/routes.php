@@ -38,6 +38,10 @@ $this->prefix('/api', [
         '/register' => 'Auth\Controllers\AccountController::postRegister',
         '/forgot-password' => 'Auth\Controllers\AccountController::postForgotPassword',
     ],
+])->prefix('/sso', [
+    'GET' => [
+        'check-iframe' => 'Auth\Controllers\SsoController::getCheckIframe',
+    ],
 ]);
 
 return [

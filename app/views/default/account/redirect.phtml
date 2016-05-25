@@ -5,8 +5,10 @@
 $config = View::getParam('config');
 ?>
 <h1><?= __('Redirecting...'); ?></h1>
+<?= View::assets('sso-js'); ?>
 <script>
     (function (w, config) {
+        $p.sso.setUid(config.uid, config.uidTtl);
         setTimeout(function () {
             w.location.href = config.url;
         }, config.timeout);
