@@ -41,7 +41,7 @@
         }
         _debug("Handle in iframe");
         if (clientUid = data.clientUid) {
-            _debug("Set client uid: " + clientUid);
+            _debug("Aware client uid: " + clientUid);
             _.vars.clientUid = clientUid;
         }
         if (data.check) {
