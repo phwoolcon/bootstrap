@@ -29,10 +29,13 @@ return [
             '../base/css/ie-hack.css',
         ],
         'ie-hack-js' => [
+            '../base/js/ie/function-bind.min.js.js',
+            '../base/js/ie/json2-20160501.min.js',
             '../base/js/ie/html5shiv-3.7.3.min.js',
-            '../base/js/ie/jquery.placeholder-2.3.1.js',
+        ],
+        'ie-hack-body-js' => [
+            '../base/js/ie/jquery.placeholder-2.3.1.min.js',
             '../base/js/ie/respond-1.4.2.js',
-            '../base/js/ie/json2-20160501.js',
             '../base/js/ie/ie-hack.js',
         ],
         'sso-js' => [
@@ -62,10 +65,13 @@ return [
                 '../../base/css/ie-hack.css',
             ],
             'ie-hack-js' => [
+                '../../base/js/ie/function-bind.min.js.js',
+                '../../base/js/ie/json2-20160501.min.js',
                 '../../base/js/ie/html5shiv-3.7.3.min.js',
-                '../../base/js/ie/jquery.placeholder-2.3.1.js',
+            ],
+            'ie-hack-body-js' => [
+                '../../base/js/ie/jquery.placeholder-2.3.1.min.js',
                 '../../base/js/ie/respond-1.4.2.js',
-                '../../base/js/ie/json2-20160501.js',
                 '../../base/js/ie/ie-hack.js',
             ],
         ],
