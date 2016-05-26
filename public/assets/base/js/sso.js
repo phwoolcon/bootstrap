@@ -1,17 +1,42 @@
 /*! phwoolcon v1.0-dev | Apache-2.0 */
 /* SSO api */
 !function (w, d) {
-    w.$p || (w.$p = {options: {isSsoServer: false, baseUrl: "/"}});
+    w.$p || (w.$p = {options: {
+        isSsoServer: false,
+        ssoCheckUri: "sso/check",
+        baseUrl: "/"
+    }});
+    var $p = w.$p,
+        $pOptions = $p.options,
+        json = w.JSON,
+        console = w.console;
+    if (!json) {
+        throw new Error("Please include JSON support script to your page.");
+    }
+    var SSO_URL_CHECK = $pOptions.ssoCheckUri,
+        TTL_ONE_DAY = 86400;
+    var methodCreateElement = "createElement",
+        methodGetElementsByTagName = "getElementsByTagName",
+        methodAppendChild = "appendChild",
+        methodApply = "apply",
+        methodAddEventListener = "addEventListener";
+    var propertyClientUid = "clientUid",
+        propertySsoServer = "ssoServer",
+        propertySsoCheckUri = "ssoCheckUri",
+        propertyIsSsoServer = "isSsoServer",
+        propertyDebug = "debug",
+        propertyInitTime = "initTime";
+
     function _debug(info) {
-        w.console && oThis.options.debug && w.console.log(info);
+        console && options[propertyDebug] && console.log(info);
     }
 
     function _serverCheck() {
-        var clientUid = vars.clientUid,
+        var clientUid = vars[propertyClientUid],
             serverUid = oThis.getUid(),
             clientWindow = w.parent;
         timerServerCheck = setTimeout(function () {
-            _serverCheck.apply(oThis);
+            _serverCheck[methodApply](oThis);
         }, 1000);
         if (clientUid == serverUid) {
             return;
@@ -23,12 +48,12 @@
             _debug("Login: " + serverUid);
             var loginData = {uid: serverUid};
             // TODO Fill loginData via ajax request to sso server
-            vars.clientUid = serverUid;
+            vars[propertyClientUid] = serverUid;
             _sendMsgTo(clientWindow, {login: loginData});
         } else {
             // Logout
             _debug("Logout");
-            vars.clientUid = null;
+            vars[propertyClientUid] = null;
             _sendMsgTo(clientWindow, {logout: true});
         }
     }
@@ -36,16 +61,16 @@
     function _serverOnMessage(e) {
         var data = _getJson(e.data),
             clientUid;
-        if (data.debug) {
-            oThis.options.debug = true;
+        if (data[propertyDebug]) {
+            options[propertyDebug] = true;
         }
         _debug("Handle in iframe");
-        if (clientUid = data.clientUid) {
+        if (clientUid = data[propertyClientUid]) {
             _debug("Aware client uid: " + clientUid);
-            vars.clientUid = clientUid;
+            vars[propertyClientUid] = clientUid;
         }
         if (data.check) {
-            _serverCheck.apply(oThis);
+            _serverCheck[methodApply](oThis);
         }
         if (data.stopCheck) {
             _debug("Stop checking");
@@ -79,8 +104,8 @@
     }
 
     function _listen(host, eventName, callback) {
-        if ("addEventListener" in host) {
-            host.addEventListener(eventName, callback, false);
+        if (methodAddEventListener in host) {
+            host[methodAddEventListener](eventName, callback, false);
         } else {
             host.attachEvent("on" + eventName, callback);
         }
@@ -104,22 +129,15 @@
         return json.stringify(obj);
     }
 
-    function _loadJsonSupportScript() {
-        if (!json && !jsonLoaded) {
-            jsonLoaded = true;
-            var script = d.createElement("script");
-            _listen(script, "readystatechange", function () {
-                json = w.JSON;
-            });
-            d.getElementsByTagName("head")[0].appendChild(script);
-            script.src = oThis.options.ssoServer + "assets/base/js/ie/json2-20160501.min.js";
-        }
-        return json;
-    }
-
-    var initialized = false,
-        json = w.JSON,
-        jsonLoaded = false,
+    var options = {
+            ssoServer: $pOptions.baseUrl,
+            isSsoServer: $pOptions[propertyIsSsoServer],
+            siteId: 0,
+            ssoToken: "",
+            initTime: 0,
+            debug: false
+        },
+        initialized = false,
         ls = w.localStorage,
         ss = w.simpleStorage || {
                 get: function (key) {
@@ -137,48 +155,38 @@
         msgTarget = "*",
         timerJsonLoad = 0,
         timerServerCheck = 0,
-        $ = w.jQuery,
-        SSO_URL_CHECK = "sso/check",
-        SSO_URL_CHECK_IFRAME = "sso/check-iframe",
-        TTL_ONE_DAY = 86400;
+        $ = w.jQuery;
 
     var oThis = $p.sso = {
-        options: {
-            ssoServer: $p.options.baseUrl,
-            isSsoServer: $p.options.isSsoServer,
-            siteId: 0,
-            ssoToken: "",
-            initTime: 0,
-            debug: false
-        },
-        init: function (options) {
-            var o = oThis.options;
-            if (options) {
-                o = oThis.options = options
+        options: options,
+        init: function (ssoOptions) {
+            if (ssoOptions) for (var key in ssoOptions) {
+                if (ssoOptions.hasOwnProperty(key)) {
+                    options[key] = ssoOptions[key];
+                }
             }
-            if (initialized === true) {
+            if (initialized) {
                 return;
             }
-            json || _loadJsonSupportScript();
-            if (+(new Date) > o.initTime + TTL_ONE_DAY) {
+            if (options[propertyInitTime] && (new Date) / 1000 > options[propertyInitTime] + TTL_ONE_DAY) {
                 w.location.reload();
                 return;
             }
             initialized = true;
-            if (o.isSsoServer) {
+            if (options[propertyIsSsoServer]) {
                 msgTarget = d.referrer;
                 _listen(w, "message", function (e) {
-                    _serverOnMessage.apply(oThis, [e]);
+                    _serverOnMessage[methodApply](oThis, [e]);
                 });
             } else {
-                msgTarget = o.ssoServer;
+                msgTarget = options[propertySsoServer];
                 _listen(w, "message", function (e) {
-                    _clientOnMessage.apply(oThis, [e]);
+                    _clientOnMessage[methodApply](oThis, [e]);
                 });
             }
         },
         setOption: function (key, value) {
-            oThis.options[key] = value;
+            options[key] = value;
             return oThis;
         },
         check: function () {
@@ -186,41 +194,32 @@
                 throw new Error("Please invoke $p.sso.init() first.");
             }
             _debug("Check triggered");
-            var o = oThis.options,
-                iframe = d.createElement("iframe"),
+            var iframe = d[methodCreateElement]("iframe"),
                 clientUid = oThis.getUid();
             _debug("Detected client uid: " + clientUid);
-            iframe.src = o.ssoServer + SSO_URL_CHECK_IFRAME;
+            iframe.src = options[propertySsoServer] + options[propertySsoCheckUri];
             iframe.id = "sso-check-iframe";
             iframe.width = 0;
             iframe.height = 0;
             iframe.frameBorder = 0;
             iframe.style.display = "none";
-            d.getElementsByTagName("body")[0].appendChild(iframe);
+            d[methodGetElementsByTagName]("body")[0][methodAppendChild](iframe);
             _listen(iframe, "load", function () {
                 var attempt = 0;
                 iw = iframe.contentWindow;
-                timerJsonLoad = setInterval(function () {
-                    if (json) {
-                        clearInterval(timerJsonLoad);
-                        _sendMsgTo(iw, {debug: o.debug, clientUid: clientUid, check: true});
-                    } else if (++attempt > 100) {
-                        clearInterval(timerJsonLoad);
-                        throw new Error("Please include JSON support script to your page.");
-                    }
-                }, 100);
+                _sendMsgTo(iw, {debug: options[propertyDebug], clientUid: clientUid, check: true});
             });
         },
         stopCheck: function () {
             _sendMsgTo(iw, {stopCheck: true});
         },
         getUid: function () {
-            return ss && ss.get(oThis.options.isSsoServer ? "uid" : "_sso_uid");
+            return ss && ss.get(options[propertyIsSsoServer] ? "uid" : "_sso_uid");
         },
         setUid: function (uid, ttl) {
             var options = {TTL: ttl || 0};
             _debug("Set uid: " + uid);
-            ss && ss.set(oThis.options.isSsoServer ? "uid" : "_sso_uid", uid, options);
+            ss && ss.set(options[propertyIsSsoServer] ? "uid" : "_sso_uid", uid, options);
         }
     };
 
