@@ -7,10 +7,10 @@
     }
 
     function _serverCheck() {
-        var clientUid = _.vars.clientUid,
+        var clientUid = vars.clientUid,
             serverUid = oThis.getUid(),
             clientWindow = w.parent;
-        _.serverCheckTimer = setTimeout(function () {
+        timerServerCheck = setTimeout(function () {
             _serverCheck.apply(oThis);
         }, 1000);
         if (clientUid == serverUid) {
@@ -23,12 +23,12 @@
             _debug("Login: " + serverUid);
             var loginData = {uid: serverUid};
             // TODO Fill loginData via ajax request to sso server
-            _.vars.clientUid = serverUid;
+            vars.clientUid = serverUid;
             _sendMsgTo(clientWindow, {login: loginData});
         } else {
             // Logout
             _debug("Logout");
-            _.vars.clientUid = null;
+            vars.clientUid = null;
             _sendMsgTo(clientWindow, {logout: true});
         }
     }
@@ -42,14 +42,14 @@
         _debug("Handle in iframe");
         if (clientUid = data.clientUid) {
             _debug("Aware client uid: " + clientUid);
-            _.vars.clientUid = clientUid;
+            vars.clientUid = clientUid;
         }
         if (data.check) {
             _serverCheck.apply(oThis);
         }
         if (data.stopCheck) {
             _debug("Stop checking");
-            clearTimeout(_.serverCheckTimer);
+            clearTimeout(timerServerCheck);
         }
     }
 
@@ -87,7 +87,7 @@
     }
 
     function _sendMsgTo(frame, message) {
-        frame.postMessage(typeof message == "string" ? message : _jsonStringify(message), oThis.options.origin);
+        frame.postMessage(typeof message == "string" ? message : _jsonStringify(message), msgTarget);
     }
 
     function _getJson(data) {
@@ -105,8 +105,8 @@
     }
 
     function _loadJsonSupportScript() {
-        if (!json && !_jsonLoaded) {
-            _jsonLoaded = true;
+        if (!json && !jsonLoaded) {
+            jsonLoaded = true;
             var script = d.createElement("script");
             _listen(script, "readystatechange", function () {
                 json = w.JSON;
@@ -117,35 +117,38 @@
         return json;
     }
 
-    var _initialized = false,
+    var initialized = false,
         json = w.JSON,
-        _jsonLoaded = false,
-        _ls = w.localStorage,
-        _ss = w.simpleStorage || {
+        jsonLoaded = false,
+        ls = w.localStorage,
+        ss = w.simpleStorage || {
                 get: function (key) {
-                    return _ls ? _ls.getItem(key) : false;
+                    return ls ? ls.getItem(key) : false;
                 },
                 set: function (key, value) {
-                    return _ls ? _ls.setItem(key, value) : false;
+                    return ls ? ls.setItem(key, value) : false;
                 }
             },
-        _ = {
-            vars: {
-                clientUid: null,
-                notifyUrl: null
-            },
-            checkIframeUrl: "sso/check-iframe",
-            serverCheckTimer: 0,
-            jsonLoadTimer: 0,
-            iw: false
+        vars = {
+            clientUid: null,
+            notifyUrl: null
         },
-        $ = w.jQuery;
+        iw = false,
+        msgTarget = "*",
+        timerJsonLoad = 0,
+        timerServerCheck = 0,
+        $ = w.jQuery,
+        SSO_URL_CHECK = "sso/check",
+        SSO_URL_CHECK_IFRAME = "sso/check-iframe",
+        TTL_ONE_DAY = 86400;
 
     var oThis = $p.sso = {
         options: {
             ssoServer: $p.options.baseUrl,
             isSsoServer: $p.options.isSsoServer,
-            origin: "*",
+            siteId: 0,
+            ssoToken: "",
+            initTime: 0,
             debug: false
         },
         init: function (options) {
@@ -153,18 +156,22 @@
             if (options) {
                 o = oThis.options = options
             }
-            if (_initialized === true) {
+            if (initialized === true) {
                 return;
             }
             json || _loadJsonSupportScript();
-            _initialized = true;
+            if (+(new Date) > o.initTime + TTL_ONE_DAY) {
+                w.location.reload();
+                return;
+            }
+            initialized = true;
             if (o.isSsoServer) {
-                o.origin = d.referrer;
+                msgTarget = d.referrer;
                 _listen(w, "message", function (e) {
                     _serverOnMessage.apply(oThis, [e]);
                 });
             } else {
-                o.origin = o.ssoServer;
+                msgTarget = o.ssoServer;
                 _listen(w, "message", function (e) {
                     _clientOnMessage.apply(oThis, [e]);
                 });
@@ -175,7 +182,7 @@
             return oThis;
         },
         check: function () {
-            if (!_initialized) {
+            if (!initialized) {
                 throw new Error("Please invoke $p.sso.init() first.");
             }
             _debug("Check triggered");
@@ -183,7 +190,7 @@
                 iframe = d.createElement("iframe"),
                 clientUid = oThis.getUid();
             _debug("Detected client uid: " + clientUid);
-            iframe.src = o.ssoServer + _.checkIframeUrl;
+            iframe.src = o.ssoServer + SSO_URL_CHECK_IFRAME;
             iframe.id = "sso-check-iframe";
             iframe.width = 0;
             iframe.height = 0;
@@ -191,29 +198,29 @@
             iframe.style.display = "none";
             d.getElementsByTagName("body")[0].appendChild(iframe);
             _listen(iframe, "load", function () {
-                var iw = _.iw = iframe.contentWindow,
-                    attempt = 0;
-                _.jsonLoadTimer = setInterval(function () {
+                var attempt = 0;
+                iw = iframe.contentWindow;
+                timerJsonLoad = setInterval(function () {
                     if (json) {
-                        clearInterval(_.jsonLoadTimer);
+                        clearInterval(timerJsonLoad);
                         _sendMsgTo(iw, {debug: o.debug, clientUid: clientUid, check: true});
                     } else if (++attempt > 100) {
-                        clearInterval(_.jsonLoadTimer);
+                        clearInterval(timerJsonLoad);
                         throw new Error("Please include JSON support script to your page.");
                     }
                 }, 100);
             });
         },
         stopCheck: function () {
-            _sendMsgTo(_.iw, {stopCheck: true});
+            _sendMsgTo(iw, {stopCheck: true});
         },
         getUid: function () {
-            return _ss && _ss.get(oThis.options.isSsoServer ? "uid" : "_sso_uid");
+            return ss && ss.get(oThis.options.isSsoServer ? "uid" : "_sso_uid");
         },
         setUid: function (uid, ttl) {
             var options = {TTL: ttl || 0};
             _debug("Set uid: " + uid);
-            _ss && _ss.set(oThis.options.isSsoServer ? "uid" : "_sso_uid", uid, options);
+            ss && ss.set(oThis.options.isSsoServer ? "uid" : "_sso_uid", uid, options);
         }
     };
 
