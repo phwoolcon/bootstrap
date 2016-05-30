@@ -6,7 +6,7 @@
     $currentUrl = url($this->request->getURI());
 ?>
     <div class="locale-selector col c4">
-        <form action="<?= url('account/redirect'); ?>" method="get" target="_self">
+        <form action="<?= url('sso/redirect'); ?>" method="get" target="_self">
             <label>
                 <span>Language:</span>
                 <select id="locale-selector" name="_locale">

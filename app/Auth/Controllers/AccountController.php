@@ -24,7 +24,7 @@ class AccountController extends Controller
             return;
         }
         $this->flashSession->success(__('Account Activated Successfully'));
-        $this->redirect('account/redirect');
+        $this->redirect('sso/redirect');
     }
 
     public function getConfirm()
@@ -34,7 +34,7 @@ class AccountController extends Controller
             User::findFirstSimple(['id' => $uid])
         ) {
             $this->flashSession->error(__('Account Confirmation Failed'));
-            $this->redirect('account/redirect');
+            $this->redirect('sso/redirect');
             return;
         }
         $this->addPageTitle(__('Account Confirmation'));
@@ -72,27 +72,7 @@ class AccountController extends Controller
         $this->rememberRedirectUrl();
         Auth::getInstance()->logout();
         $this->flashSession->success(__('Logout success'));
-        return $this->redirect(url('account/redirect'));
-    }
-
-    public function getRedirect()
-    {
-        $this->rememberRedirectUrl();
-        $this->addPageTitle(__('Redirecting'));
-        $url = $this->session->get('redirect_url', url('account'), true);
-        if ($this->request->get('_immediately')) {
-            $this->redirect($url);
-        } else {
-            $this->render('account', 'redirect', [
-                'config' => [
-                    'url' => $url,
-                    'timeout' => Auth::getOption('redirect_timeout') * 1000,
-                    'uid' => Auth::getUser() ? Auth::getUser()->getId() : null,
-                    // TODO Use session TTL instead of 0
-                    'uidTtl' => Auth::getUser() ? 0 : 0,
-                ]
-            ]);
-        }
+        return $this->redirect(url('sso/redirect'));
     }
 
     public function getRegister()
@@ -113,7 +93,7 @@ class AccountController extends Controller
             Auth::getInstance()->login($credential);
             $this->session->clearFormData('auth_retry');
             $this->flashSession->success(__('Login success'));
-            return $this->redirect(url('account/redirect'));
+            return $this->redirect(url('sso/redirect'));
         } catch (AuthException $e) {
             $this->flashSession->error($e->getMessage());
         } catch (\Exception $e) {
@@ -137,7 +117,7 @@ class AccountController extends Controller
             $this->session->clearFormData('register_retry');
             if ($user->getData('confirmed')) {
                 $this->flashSession->success(__('Register success'));
-                return $this->redirect(url('account/redirect'));
+                return $this->redirect(url('sso/redirect'));
             }
             $this->flashSession->success(__('Register success, but confirmation required'));
             return $this->redirect(url('account/confirm'));

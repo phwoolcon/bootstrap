@@ -28,7 +28,6 @@ $this->prefix('/api', [
         '/login' => 'Auth\Controllers\AccountController::getLogin',
         '/register' => 'Auth\Controllers\AccountController::getRegister',
         '/logout' => 'Auth\Controllers\AccountController::getLogout',
-        '/redirect' => 'Auth\Controllers\AccountController::getRedirect',
         '/confirm' => 'Auth\Controllers\AccountController::getConfirm',
         '/activate' => 'Auth\Controllers\AccountController::getActivate',
         '/forgot-password' => 'Auth\Controllers\AccountController::getForgotPassword',
@@ -40,7 +39,9 @@ $this->prefix('/api', [
     ],
 ])->prefix('/sso', [
     'GET' => [
-        'check-iframe' => 'Auth\Controllers\SsoController::getCheckIframe',
+        '/check' => 'Auth\Controllers\SsoController::getCheckIframe',
+        '/server-check' => 'Auth\Controllers\SsoController::getServerCheck',
+        '/redirect' => 'Auth\Controllers\SsoController::getRedirect',
     ],
 ]);
 

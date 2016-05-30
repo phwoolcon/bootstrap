@@ -31,4 +31,7 @@ return [
         ],
         'redirect_timeout' => 2,
     ],
+    'phwoolcon_js_options' => [
+        'ssoCheckUri' => 'sso/check',
+    ],
 ];

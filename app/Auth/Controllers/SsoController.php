@@ -1,11 +1,16 @@
 <?php
 namespace Auth\Controllers;
 
-use Phwoolcon\Controller;
+use Phwoolcon\Auth\Auth;
 use Phwoolcon\View;
 
-class SsoController extends Controller
+class SsoController extends AccountController
 {
+
+    public function getServerCheck()
+    {
+        $this->jsonReturn();
+    }
 
     public function getCheckIframe()
     {
@@ -23,5 +28,24 @@ class SsoController extends Controller
             $this->render('sso', 'iframe');
             $this->setBrowserCache($pageId, 'all', 3600);
         }
+    }
+
+    public function getRedirect()
+    {
+        $this->rememberRedirectUrl();
+        $this->addPageTitle(__('Redirecting'));
+        $url = $this->session->get('redirect_url', url('account'), true);
+        if ($this->request->get('_immediately')) {
+            return $this->redirect($url);
+        }
+        return $this->render('sso', 'redirect', [
+            'config' => [
+                'url' => $url,
+                'timeout' => Auth::getOption('redirect_timeout') * 1000,
+                'uid' => Auth::getUser() ? Auth::getUser()->getId() : null,
+                // TODO Use session TTL instead of 0
+                'uidTtl' => Auth::getUser() ? 0 : 0,
+            ],
+        ]);
     }
 }
