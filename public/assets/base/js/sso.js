@@ -22,10 +22,10 @@
         vars = {};
     var simpleStorage = w.simpleStorage || {
             get: function (key) {
-                return w.localStorage ? w.localStorage.getItem("_sso_" + key) : false;
+                return w.localStorage ? _getJson(w.localStorage.getItem("_sso_" + key)) : false;
             },
             set: function (key, value) {
-                return w.localStorage ? w.localStorage.setItem("_sso_" + key, value) : false;
+                return w.localStorage ? w.localStorage.setItem("_sso_" + key, _jsonStringify(value)) : false;
             }
         };
     var sso = w.$p.sso = {
@@ -66,10 +66,7 @@
             }
             _debug("Start checking");
             var clientUid = sso.getUid(),
-                message = {};
-            message.debug = options.debug;
-            message.clientUid = clientUid;
-            message.check = true;
+                message = {debug: options.debug, clientUid: clientUid, check: true};
             if (iframe) {
                 return serverWindow && _sendMsgTo(serverWindow, message);
             }
@@ -103,7 +100,7 @@
     }
 
     function _clientLogout() {
-        _debug("Client logout");
+        vars.clientUid && _debug("Client logout");
         // TODO Invoke client notify url to finish logout
         sso.setUid(null);
     }
@@ -171,7 +168,7 @@
             _sendMsgTo(clientWindow, {login: loginData});
         } else {
             // Logout
-            _debug("Logout");
+            clientUid && _debug("Logout");
             vars.clientUid = null;
             _sendMsgTo(clientWindow, {logout: true});
         }
