@@ -4,16 +4,18 @@
     w.$p || (w.$p = {
         options: {
             ssoCheckUri: "sso/check",
+            ssoServerCheckUri: "sso/server-check",
             baseUrl: "/"
         }
     });
 
     var $ = w.jQuery;
-    var SSO_URL_CHECK = $p.options.ssoCheckUri,
+    var SSO_URL_SERVER_CHECK = $p.options.ssoServerCheckUri,
         TTL_ONE_DAY = 86400;
     var initialized, iframe, clientWindow, serverWindow, msgTargetOrigin, timerServerCheck;
     var options = {
             ssoServer: $p.options.baseUrl,
+            ssoCheckUri: $p.options.ssoCheckUri,
             siteId: 0,
             ssoToken: "",
             initTime: 0,
