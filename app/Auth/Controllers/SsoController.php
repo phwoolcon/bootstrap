@@ -1,15 +1,19 @@
 <?php
 namespace Auth\Controllers;
 
+use Auth\Model\SsoSite;
+use Exception;
 use Phwoolcon\Auth\Auth;
+use Phwoolcon\Crypt;
+use Phwoolcon\Log;
 use Phwoolcon\View;
 
 class SsoController extends AccountController
 {
 
-    public function getServerCheck()
+    protected function checkInitToken($initTime, $initToken, $site)
     {
-        $this->jsonReturn();
+        return $initToken == md5(md5(fnGet($site, 'id') . $initTime) . fnGet($site, 'site_secret'));
     }
 
     public function getCheckIframe()
@@ -47,5 +51,31 @@ class SsoController extends AccountController
                 'uidTtl' => Auth::getUser() ? 0 : 0,
             ],
         ]);
+    }
+
+    public function postServerCheck()
+    {
+        $input = $this->request->get();
+        $this->jsonReturn($ssoData = $this->getSsoData($input), isset($ssoData['error']) ? 400 : 200);
+    }
+
+    protected function getSsoData($input)
+    {
+        try {
+            $site = SsoSite::getSiteByReturnUrl(fnGet($input, 'notifyUrl'));
+            $initToken = fnGet($input, 'initToken');
+            $initTime = fnGet($input, 'initTime');
+            if (!$this->checkInitToken($initTime, $initToken, $site)) {
+                return ['error' => 'Invalid init token'];
+            }
+            if ($user = Auth::getUser()) {
+                $ssoData = ['user_data' => $user->getData()];
+                return $ssoData;
+            }
+            return ['user_data' => false];
+        } catch (Exception $e) {
+            Log::exception($e);
+            return [];
+        }
     }
 }

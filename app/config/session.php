@@ -34,6 +34,7 @@ return [
         'redis' => [
             'adapter' => 'Phwoolcon\Session\Adapter\Redis',
             'options' => [
+                'index' => 6,
             ],
         ],
         'memcached' => [

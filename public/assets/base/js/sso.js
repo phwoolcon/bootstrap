@@ -10,15 +10,14 @@
     });
 
     var $ = w.jQuery;
-    var SSO_URL_SERVER_CHECK = $p.options.ssoServerCheckUri,
-        TTL_ONE_DAY = 86400;
     var initialized, iframe, clientWindow, serverWindow, msgTargetOrigin, timerServerCheck;
     var options = {
             ssoServer: $p.options.baseUrl,
             ssoCheckUri: $p.options.ssoCheckUri,
-            siteId: 0,
-            ssoToken: "",
+            ssoServerCheckUri: $p.options.ssoServerCheckUri,
+            initToken: "",
             initTime: 0,
+            notifyUrl: "",
             debug: false
         },
         vars = {};
@@ -35,10 +34,6 @@
         init: function (ssoOptions) {
             sso.setOptions(ssoOptions);
             if (initialized) {
-                return;
-            }
-            if (options.initTime && (new Date) / 1000 > options.initTime + TTL_ONE_DAY) {
-                w.location.reload();
                 return;
             }
             initialized = true;
@@ -68,7 +63,14 @@
             }
             _debug("Start checking");
             var clientUid = sso.getUid(),
-                message = {debug: options.debug, clientUid: clientUid, check: true};
+                message = {
+                    clientUid: clientUid, check: true, setOptions: {
+                        debug: options.debug,
+                        initToken: options.initToken,
+                        initTime: options.initTime,
+                        notifyUrl: options.notifyUrl
+                    }
+                };
             if (iframe) {
                 return serverWindow && _sendMsgTo(serverWindow, message);
             }
@@ -98,7 +100,6 @@
         _debug("Client login");
         _debug(loginData);
         // TODO Invoke client notify url to finish login
-        sso.setUid(loginData.uid);
     }
 
     function _clientLogout() {
@@ -108,11 +109,13 @@
     }
 
     function _clientOnMessage(e) {
-        var data = _getJson(e.data),
-            loginData;
+        var data = _getJson(e.data);
         _debug("Handle in client");
-        if (loginData = data.login) {
-            _clientLogin(loginData);
+        if (data.login) {
+            _clientLogin(data.login);
+        }
+        if (data.setUid) {
+            sso.setUid(data.setUid);
         }
         if (data.logout) {
             _clientLogout();
@@ -164,10 +167,16 @@
         if (serverUid) {
             // Login
             _debug("Login: " + serverUid);
-            loginData = {uid: serverUid};
-            // TODO Fill loginData via ajax request to sso server
-            vars.clientUid = serverUid;
-            _sendMsgTo(clientWindow, {login: loginData});
+            $.post(options.ssoServer + options.ssoServerCheckUri, {
+                notifyUrl: options.notifyUrl,
+                initTime: options.initTime,
+                initToken: options.initToken
+            }, function (data) {
+                vars.clientUid = serverUid;
+                _debug(data);
+                _sendMsgTo(clientWindow, {login: loginData});
+            }, 'json');
+            _sendMsgTo(clientWindow, {setUid: serverUid});
         } else {
             // Logout
             clientUid && _debug("Logout");
@@ -178,9 +187,10 @@
 
     function _serverOnMessage(e) {
         var data = _getJson(e.data),
-            clientUid;
-        if (data.debug) {
-            options.debug = true;
+            clientUid,
+            setOptions;
+        if (setOptions = data.setOptions) {
+            sso.setOptions(setOptions);
         }
         _debug("Handle in iframe");
         if (clientUid = data.clientUid) {

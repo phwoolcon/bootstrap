@@ -16,7 +16,8 @@ if (is_file($target)) {
     $content = file_get_contents($source);
 }
 $length = 32;
-$key = substr(str_replace(['/', '+', '='], '', base64_encode(openssl_random_pseudo_bytes($length * 2))), 0, $length);
+$randomFunction = function_exists('random_bytes') ? 'random_bytes' : 'openssl_random_pseudo_bytes';
+$key = substr(str_replace(['/', '+', '='], '', base64_encode($randomFunction($length * 2))), 0, $length);
 $content = str_replace($search, $key, $content);
 file_put_contents($target, $content);
 echo "Cookie encrypt key [{$key}] set successfully.", PHP_EOL;

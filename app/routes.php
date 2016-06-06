@@ -40,8 +40,13 @@ $this->prefix('/api', [
 ])->prefix('/sso', [
     'GET' => [
         '/check' => 'Auth\Controllers\SsoController::getCheckIframe',
-        '/server-check' => 'Auth\Controllers\SsoController::getServerCheck',
         '/redirect' => 'Auth\Controllers\SsoController::getRedirect',
+    ],
+    'POST' => [
+        '/server-check' => [
+            'Auth\Controllers\SsoController::postServerCheck',
+            'filter' => DisableCsrfFilter::instance(),
+        ],
     ],
 ]);
 

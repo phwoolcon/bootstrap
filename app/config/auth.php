@@ -33,5 +33,6 @@ return [
     ],
     'phwoolcon_js_options' => [
         'ssoCheckUri' => 'sso/check',
+        'ssoServerCheckUri' => 'sso/server-check'
     ],
 ];
