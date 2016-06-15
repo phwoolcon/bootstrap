@@ -2,11 +2,13 @@
 
 namespace Admin\Controllers;
 
+use Phwoolcon\Controller;
 use Phwoolcon\Controller\Admin;
 use Phwoolcon\Router;
 
-class AccountController extends Admin
+class AccountController extends Controller
 {
+    use Admin;
 
     public function getIndex()
     {
