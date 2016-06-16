@@ -1,7 +1,9 @@
 /.idea/
 /vendor/
 /ignore/
-/app/config/production
-/app/config/testing
-/storage
+/app/config/production/
+/app/config/testing/
+/bin/install/packages/
+/storage/
 /public/assets/compiled/
+/public/assets/base/packages/
