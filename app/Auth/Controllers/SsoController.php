@@ -1,20 +1,14 @@
 <?php
 namespace Auth\Controllers;
 
-use Auth\Model\SsoSite;
-use Exception;
 use Phwoolcon\Auth\Auth;
-use Phwoolcon\Crypt;
-use Phwoolcon\Log;
+use Phwoolcon\Auth\Controller\SsoTrait;
+use Phwoolcon\Model\User;
 use Phwoolcon\View;
 
 class SsoController extends AccountController
 {
-
-    protected function checkInitToken($initTime, $initToken, $site)
-    {
-        return $initToken == md5(md5(fnGet($site, 'id') . $initTime) . fnGet($site, 'site_secret'));
-    }
+    use SsoTrait;
 
     public function getCheckIframe()
     {
@@ -30,7 +24,7 @@ class SsoController extends AccountController
             View::noHeader(true);
             View::noFooter(true);
             $this->render('sso', 'iframe');
-            $this->setBrowserCache($pageId, 'all', 3600);
+            $this->setBrowserCache($pageId, static::BROWSER_CACHE_ETAG | static::BROWSER_CACHE_CONTENT, 3600);
         }
     }
 
@@ -40,9 +34,10 @@ class SsoController extends AccountController
         $this->addPageTitle(__('Redirecting'));
         $url = $this->session->get('redirect_url', url('account'), true);
         if ($this->request->get('_immediately')) {
-            return $this->redirect($url);
+            $this->redirect($url);
+            return;
         }
-        return $this->render('sso', 'redirect', [
+        $this->render('sso', 'redirect', [
             'config' => [
                 'url' => $url,
                 'timeout' => Auth::getOption('redirect_timeout') * 1000,
@@ -56,26 +51,15 @@ class SsoController extends AccountController
     public function postServerCheck()
     {
         $input = $this->request->get();
-        $this->jsonReturn($ssoData = $this->getSsoData($input), isset($ssoData['error']) ? 400 : 200);
-    }
-
-    protected function getSsoData($input)
-    {
-        try {
-            $site = SsoSite::getSiteByReturnUrl(fnGet($input, 'notifyUrl'));
-            $initToken = fnGet($input, 'initToken');
-            $initTime = fnGet($input, 'initTime');
-            if (!$this->checkInitToken($initTime, $initToken, $site)) {
-                return ['error' => 'Invalid init token'];
-            }
-            if ($user = Auth::getUser()) {
-                $ssoData = ['user_data' => $user->getData()];
-                return $ssoData;
-            }
-            return ['user_data' => false];
-        } catch (Exception $e) {
-            Log::exception($e);
-            return [];
+        $ssoData = $this->getSsoUserData($input);
+        if (fnGet($ssoData, 'error')) {
+            $this->jsonReturn($ssoData, 400);
+            return;
         }
+        if (($user = fnGet($ssoData, 'user')) instanceof User) {
+            unset($ssoData['user']);
+            // TODO Set extra sso data
+        }
+        $this->jsonReturn($ssoData, 200);
     }
 }
