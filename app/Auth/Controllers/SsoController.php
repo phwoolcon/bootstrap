@@ -3,7 +3,6 @@ namespace Auth\Controllers;
 
 use Phwoolcon\Auth\Auth;
 use Phwoolcon\Auth\Controller\SsoTrait;
-use Phwoolcon\Model\User;
 use Phwoolcon\View;
 
 class SsoController extends AccountController
@@ -56,10 +55,7 @@ class SsoController extends AccountController
             $this->jsonReturn($ssoData, 400);
             return;
         }
-        if (($user = fnGet($ssoData, 'user')) instanceof User) {
-            unset($ssoData['user']);
-            // TODO Set extra sso data
-        }
+        $ssoData = $this->encryptSsoData($ssoData);
         $this->jsonReturn($ssoData, 200);
     }
 }
