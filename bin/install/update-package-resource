@@ -1,0 +1,77 @@
+#!/usr/bin/env php
+<?php
+
+$baseDir = dirname(dirname(__DIR__));
+$vendorDir = $baseDir . '/vendor';
+
+include $baseDir . '/bootstrap/di.php';
+
+$configPath = $_SERVER['PHWOOLCON_CONFIG_PATH'];
+$assetsOptions = Config::get('view.options.assets_options');
+$assetsPath = $assetsOptions['base_path'] . '/' . $assetsOptions['assets_dir'] . '/base/packages';
+is_dir($configPath) or mkdir($configPath, 0777, true);
+is_dir($assetsPath) or mkdir($assetsPath, 0777, true);
+
+$packages = [];
+$packageFiles = glob($vendorDir . '/bin/phwoolcon-package-*.php');
+
+foreach ($packageFiles as $file) {
+    if (!is_array($package = include($file))) {
+        continue;
+    }
+    foreach ($package as $path => $resources) {
+        $path = $vendorDir . '/' . $path;
+        foreach ($resources as $type => $value) {
+            switch ($type) {
+                case 'config':
+                    installConfig($path, $value, $configPath);
+                    break;
+                case 'assets':
+                    installAssets($path, $value, $assetsPath);
+                    break;
+            }
+        }
+    }
+}
+
+function installConfig($path, $file, $configPath)
+{
+    if (is_array($file)) {
+        foreach ($file as $subFile) {
+            installConfig($path, $subFile, $configPath);
+        }
+        return;
+    }
+    if ([strpos($file, '..'), strpos($file, '/'), strpos($file, '\\')] != [false, false, false]) {
+        return;
+    }
+    if (!is_file($source = $path . '/phwoolcon-package/config/' . $file)) {
+        return;
+    }
+    $destination = $configPath . '/' . $file;
+    $installed = is_file($destination);
+    if (copy($source, $destination) && !$installed) {
+        echo 'Installed config file ' . $file . PHP_EOL;
+    }
+}
+
+function installAssets($path, $file, $assetsPath)
+{
+    if (is_array($file)) {
+        foreach ($file as $subFile) {
+            installAssets($path, $subFile, $assetsPath);
+        }
+        return;
+    }
+    if (strpos($file, '..') !== false) {
+        return;
+    }
+    if (!is_file($source = $path . '/phwoolcon-package/assets/' . $file)) {
+        return;
+    }
+    $destination = $assetsPath . '/' . $file;
+    is_dir($dir = dirname($destination)) or mkdir($dir, 0777, true);
+    if (copy($source, $destination)) {
+        echo 'Updated assets file ' . $file . PHP_EOL;
+    }
+}

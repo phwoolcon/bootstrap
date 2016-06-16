@@ -39,7 +39,7 @@ return [
             '../base/js/ie/ie-hack.js',
         ],
         'sso-js' => [
-            '../base/js/sso.js',
+            '../base/packages/phwoolcon-auth/sso.js',
         ],
     ],
     'admin' => [
