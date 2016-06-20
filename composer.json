@@ -14,7 +14,8 @@
     "require": {
         "php": ">=5.5.0",
         "phwoolcon/phwoolcon": "dev-master",
-        "phwoolcon/auth": "dev-master"
+        "phwoolcon/auth": "dev-master",
+        "phwoolcon/payment": "dev-master"
     },
     "autoload": {
         "classmap": [
