@@ -33,11 +33,5 @@
             "bin/convert-autoload",
             "bin/cli clear:cache -c"
         ]
-    },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https?://packagist.org"
-        }
     }
 }
