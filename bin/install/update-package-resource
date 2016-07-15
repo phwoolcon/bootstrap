@@ -1,16 +1,24 @@
 #!/usr/bin/env php
 <?php
 
+use Phwoolcon\Config;
+
 $baseDir = dirname(dirname(__DIR__));
 $vendorDir = $baseDir . '/vendor';
 
-include $baseDir . '/bootstrap/di.php';
+$_SERVER['PHWOOLCON_ENV'] = 'installing';
+
+include $baseDir . '/bootstrap/start.php';
+Config::register($di);
 
 $configPath = $_SERVER['PHWOOLCON_CONFIG_PATH'];
-$assetsOptions = Config::get('view.options.assets_options');
-$assetsPath = $assetsOptions['base_path'] . '/' . $assetsOptions['assets_dir'] . '/base/packages';
+$assetsBasePath = Config::get('view.options.assets_options.base_path', $baseDir . '/public');
+$assetsDir = Config::get('view.options.assets_options.assets_dir', 'assets');
+$assetsPath = $assetsBasePath . '/' . $assetsDir . '/base/packages';
 is_dir($configPath) or mkdir($configPath, 0777, true);
 is_dir($assetsPath) or mkdir($assetsPath, 0777, true);
+
+$replaceConfig = Config::get('app.on_phwoolcon_update.replace_config');
 
 $packages = [];
 $packageFiles = glob($vendorDir . '/bin/phwoolcon-package-*.php');
@@ -19,26 +27,26 @@ foreach ($packageFiles as $file) {
     if (!is_array($package = include($file))) {
         continue;
     }
-    foreach ($package as $path => $resources) {
-        $path = $vendorDir . '/' . $path;
+    foreach ($package as $name => $resources) {
+        $path = $vendorDir . '/' . $name;
         foreach ($resources as $type => $value) {
             switch ($type) {
                 case 'config':
-                    installConfig($path, $value, $configPath);
+                    installConfig($name, $path, $value, $configPath, $replaceConfig);
                     break;
                 case 'assets':
-                    installAssets($path, $value, $assetsPath);
+                    installAssets($name, $path, $value, $assetsPath);
                     break;
             }
         }
     }
 }
 
-function installConfig($path, $file, $configPath)
+function installConfig($package, $path, $file, $configPath, $replaceConfig = false)
 {
     if (is_array($file)) {
         foreach ($file as $subFile) {
-            installConfig($path, $subFile, $configPath);
+            installConfig($package, $path, $subFile, $configPath, $replaceConfig);
         }
         return;
     }
@@ -50,16 +58,16 @@ function installConfig($path, $file, $configPath)
     }
     $destination = $configPath . '/' . $file;
     $installed = is_file($destination);
-    if (copy($source, $destination) && !$installed) {
-        echo 'Installed config file ' . $file . PHP_EOL;
+    if (($replaceConfig || !$installed) && copy($source, $destination)) {
+        echo sprintf('[%s] Installed config file %s', $package, $file), PHP_EOL;
     }
 }
 
-function installAssets($path, $file, $assetsPath)
+function installAssets($package, $path, $file, $assetsPath)
 {
     if (is_array($file)) {
         foreach ($file as $subFile) {
-            installAssets($path, $subFile, $assetsPath);
+            installAssets($package, $path, $subFile, $assetsPath);
         }
         return;
     }
@@ -72,6 +80,6 @@ function installAssets($path, $file, $assetsPath)
     $destination = $assetsPath . '/' . $file;
     is_dir($dir = dirname($destination)) or mkdir($dir, 0777, true);
     if (copy($source, $destination)) {
-        echo 'Updated assets file ' . $file . PHP_EOL;
+        echo sprintf('[%s] Updated assets file %s', $package, $file), PHP_EOL;
     }
 }
