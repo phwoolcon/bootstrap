@@ -11,6 +11,7 @@ include ROOT_PATH . '/bootstrap/functions.php';
 
 //$_SERVER['ENABLE_PROFILER']=1;
 profilerStart();
+include ROOT_PATH . '/bootstrap/start.php';
 include ROOT_PATH . '/bootstrap/di.php';
 
 set_exception_handler('exceptionHandler');
