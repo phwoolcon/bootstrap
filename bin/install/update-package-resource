@@ -1,7 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+use Phwoolcon\Cache;
 use Phwoolcon\Config;
+use Phwoolcon\Db;
 
 $baseDir = dirname(dirname(__DIR__));
 $vendorDir = $baseDir . '/vendor';
@@ -9,16 +11,24 @@ $vendorDir = $baseDir . '/vendor';
 ob_start();
 try {
     include $baseDir . '/bootstrap/start.php';
+    $firstRun = false;
+} catch (Exception $e) {
+    $firstRun = true;
+}
+ob_end_clean();
+
+if ($firstRun) {
+    $assetsBasePath = $baseDir . '/public';
+    $assetsDir = 'assets';
+    $replaceConfig = true;
+} else {
+    Db::register($di);
+    Cache::register($di);
     Config::register($di);
     $assetsBasePath = Config::get('view.options.assets_options.base_path', $baseDir . '/public');
     $assetsDir = Config::get('view.options.assets_options.assets_dir', 'assets');
     $replaceConfig = Config::get('app.on_phwoolcon_update.replace_config');
-} catch (Exception $e) {
-    $assetsBasePath = $baseDir . '/public';
-    $assetsDir = 'assets';
-    $replaceConfig = true;
 }
-ob_end_clean();
 
 $configPath = $_SERVER['PHWOOLCON_CONFIG_PATH'];
 $assetsPath = $assetsBasePath . '/' . $assetsDir . '/base/packages';
@@ -64,7 +74,8 @@ function installConfig($package, $path, $file, $configPath, $replaceConfig = fal
     $destination = $configPath . '/' . $file;
     $installed = is_file($destination);
     if (($replaceConfig || !$installed) && copy($source, $destination)) {
-        echo sprintf('[%s] Installed config file %s', $package, $file), PHP_EOL;
+        $spaces = str_repeat(' ', 20 - strlen($package));
+        echo sprintf('[%s]%s Installed config file %s', $package, $spaces, $file), PHP_EOL;
     }
 }
 
@@ -85,6 +96,7 @@ function installAssets($package, $path, $file, $assetsPath)
     $destination = $assetsPath . '/' . $file;
     is_dir($dir = dirname($destination)) or mkdir($dir, 0777, true);
     if (copy($source, $destination)) {
-        echo sprintf('[%s] Updated assets file %s', $package, $file), PHP_EOL;
+        $spaces = str_repeat(' ', 20 - strlen($package));
+        echo sprintf('[%s]%s Updated assets file %s', $package, $spaces, $file), PHP_EOL;
     }
 }
