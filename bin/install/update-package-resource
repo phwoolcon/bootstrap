@@ -6,6 +6,7 @@ use Phwoolcon\Config;
 $baseDir = dirname(dirname(__DIR__));
 $vendorDir = $baseDir . '/vendor';
 
+ob_start();
 try {
     include $baseDir . '/bootstrap/start.php';
     Config::register($di);
@@ -17,6 +18,7 @@ try {
     $assetsDir = 'assets';
     $replaceConfig = true;
 }
+ob_end_clean();
 
 $configPath = $_SERVER['PHWOOLCON_CONFIG_PATH'];
 $assetsPath = $assetsBasePath . '/' . $assetsDir . '/base/packages';
