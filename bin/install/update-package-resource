@@ -6,8 +6,6 @@ use Phwoolcon\Config;
 $baseDir = dirname(dirname(__DIR__));
 $vendorDir = $baseDir . '/vendor';
 
-$_SERVER['PHWOOLCON_ENV'] = 'installing';
-
 try {
     include $baseDir . '/bootstrap/start.php';
     Config::register($di);
