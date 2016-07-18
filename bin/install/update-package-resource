@@ -8,17 +8,22 @@ $vendorDir = $baseDir . '/vendor';
 
 $_SERVER['PHWOOLCON_ENV'] = 'installing';
 
-include $baseDir . '/bootstrap/start.php';
-Config::register($di);
+try {
+    include $baseDir . '/bootstrap/start.php';
+    Config::register($di);
+    $assetsBasePath = Config::get('view.options.assets_options.base_path', $baseDir . '/public');
+    $assetsDir = Config::get('view.options.assets_options.assets_dir', 'assets');
+    $replaceConfig = Config::get('app.on_phwoolcon_update.replace_config');
+} catch (Exception $e) {
+    $assetsBasePath = $baseDir . '/public';
+    $assetsDir = 'assets';
+    $replaceConfig = true;
+}
 
 $configPath = $_SERVER['PHWOOLCON_CONFIG_PATH'];
-$assetsBasePath = Config::get('view.options.assets_options.base_path', $baseDir . '/public');
-$assetsDir = Config::get('view.options.assets_options.assets_dir', 'assets');
 $assetsPath = $assetsBasePath . '/' . $assetsDir . '/base/packages';
 is_dir($configPath) or mkdir($configPath, 0777, true);
 is_dir($assetsPath) or mkdir($assetsPath, 0777, true);
-
-$replaceConfig = Config::get('app.on_phwoolcon_update.replace_config');
 
 $packages = [];
 $packageFiles = glob($vendorDir . '/bin/phwoolcon-package-*.php');
