@@ -14,6 +14,7 @@ use Phwoolcon\Session;
 use Phwoolcon\View;
 use Phwoolcon\Queue;
 use Phwoolcon\Auth\Auth;
+use Phwoolcon\Payment\Processor;
 
 // Register components
 Events::register($di);
@@ -30,6 +31,7 @@ Session::register($di);
 View::register($di);
 Auth::register($di);
 Queue::register($di);
+Processor::register($di);
 
 $loader->registerNamespaces(Config::get('app.autoload.namespaces', []), true);
 
