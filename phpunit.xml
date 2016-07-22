@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./tests/start.php"
+<phpunit bootstrap="tests/start.php"
          backupGlobals="false"
          backupStaticAttributes="false"
          verbose="true"
@@ -9,8 +9,24 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="true">
-    <testsuite name="Phwoolcon - Test Suite">
-        <directory>./tests/</directory>
-    </testsuite>
+         syntaxCheck="true"
+>
+    <php>
+        <ini name="intl.default_locale" value="en"/>
+        <ini name="intl.error_level" value="0"/>
+        <ini name="memory_limit" value="-1"/>
+    </php>
+    <testsuites>
+        <testsuite name="Phwoolcon - Unit Tests">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Phwoolcon - Integration Tests">
+            <directory>tests/Integration</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
