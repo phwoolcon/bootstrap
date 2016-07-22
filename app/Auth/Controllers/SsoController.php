@@ -16,7 +16,7 @@ class SsoController extends AccountController
         if ($eTag && $eTag == $this->getBrowserCache($pageId, static::BROWSER_CACHE_ETAG)) {
             $this->response->setStatusCode(304);
             $this->setBrowserCacheHeaders($eTag, 3600);
-        } else if ($content = $this->getBrowserCache($pageId, static::BROWSER_CACHE_CONTENT)) {
+        } elseif ($content = $this->getBrowserCache($pageId, static::BROWSER_CACHE_CONTENT)) {
             $this->response->setContent($content);
             $this->setBrowserCacheHeaders($this->getContentEtag($content), 3600);
         } else {

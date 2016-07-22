@@ -83,7 +83,8 @@ class AccountController extends Controller
     }
 
     public function postForgotPassword()
-    {}
+    {
+    }
 
     public function postLogin()
     {

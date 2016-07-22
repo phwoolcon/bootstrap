@@ -22,7 +22,8 @@ class AccountController extends Controller
     }
 
     public function postLogin()
-    {}
+    {
+    }
 
     public function missingMethod()
     {
