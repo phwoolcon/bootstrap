@@ -17,9 +17,18 @@
         "phwoolcon/auth": "dev-master",
         "phwoolcon/payment": "~1.0"
     },
+    "require-dev": {
+        "techpivot/phalcon-ci-installer": "~1.0"
+    },
     "autoload": {
         "classmap": [
             "app"
+        ],
+        "psr-4": {
+            "Tests\\": "tests"
+        },
+        "exclude-from-classmap": [
+            "/tests/"
         ]
     },
     "scripts": {
