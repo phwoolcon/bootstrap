@@ -1,6 +1,7 @@
 /.idea/
 /vendor/
 /ignore/
+/app/config/.gitignore
 /app/config/production/
 /app/config/testing/
 /bin/install/packages/
