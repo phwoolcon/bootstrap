@@ -48,6 +48,13 @@ $this->prefix('/api', [
             'filter' => DisableCsrfFilter::instance(),
         ],
     ],
+])->prefix('/pay', [
+    'GET' => [
+        '/form' => 'Payment\Controllers\OrderController::getForm',
+    ],
+    'POST' => [
+        '/order/place' => 'Payment\Controllers\OrderController::postPlace',
+    ],
 ]);
 
 return [

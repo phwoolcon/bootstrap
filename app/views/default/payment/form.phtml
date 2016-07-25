@@ -1,0 +1,24 @@
+<?php
+/* @var Phwoolcon\View\Engine\Php $this */
+?>
+<h2>￥0.01</h2>
+<h1><?= __('Select payment method'); ?></h1>
+<form method="post" action="<?= url('pay/order/place', null, true) ?>" enctype="application/x-www-form-urlencoded">
+    <?php foreach (View::getParam('gateways') as $gatewayName => $gateway) { ?>
+        <?php foreach (fnGet($gateway, 'methods', []) as $methodName => $method) { ?>
+            <div class="payment-method-<?= $gatewayName?>-<?= $methodName?>">
+                <label>
+                    <input type="radio" name="payment_method" value="<?= $gatewayName . '.' . $methodName ?>">
+                    <span class="gateway-label"><?= fnGet($gateway, 'label') ?></span>
+                    <span class="method-label"><?= fnGet($method, 'label') ?></span>
+                </label>
+            </div>
+        <?php } ?>
+    <?php } ?>
+    <div>
+        <button type="submit"><?= __('Place Order') ?></button>
+    </div>
+    <div class="hidden">
+        <input type="hidden" name="_token" value="<?= Session::getCsrfToken(true); ?>" autocomplete="off">
+    </div>
+</form>
