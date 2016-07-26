@@ -174,6 +174,10 @@ return [
                     'notNull' => true,
                     'primary' => true,
                 ]),
+                new Column('request_data', [
+                    'type' => Column::TYPE_TEXT,
+                    'notNull' => false,
+                ]),
                 new Column('data', [
                     'type' => Column::TYPE_TEXT,
                     'notNull' => false,
