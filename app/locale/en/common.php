@@ -4,6 +4,7 @@ return [
     '404 NOT FOUND' => '404 NOT FOUND',
     '500 INTERNAL SERVER ERROR' => '500 INTERNAL SERVER ERROR',
     'About Us' => 'About Us',
+    'Catalog' => 'Catalog',
     'CSRF Token Verification Failed' => 'CSRF Token Verification Failed',
     'Go back' => 'Go back',
     'Home' => 'Home',

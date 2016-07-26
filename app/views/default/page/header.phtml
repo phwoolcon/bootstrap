@@ -10,6 +10,7 @@ if (View::noHeader()) {
     <nav class="nav" tabindex="-1">
         <div class="container">
             <a href="<?= url(''); ?>" class="page-name"><?= __('Home'); ?></a>
+            <a href="<?= url('catalog'); ?>"><?= __('Catalog'); ?></a>
             <?php if (Auth::getUser()) { ?>
                 <a href="<?= url('account'); ?>"><?= __('My Account'); ?></a>
                 <a href="<?= url('account/logout'); ?>"><?= __('Logout'); ?></a>

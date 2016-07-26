@@ -1,16 +1,19 @@
 <?php
 /* @var Phwoolcon\View\Engine\Php $this */
+$quote = View::getParam('quote');
 ?>
-<h2>￥0.01</h2>
-<h1><?= __('Select payment method'); ?></h1>
+<h1><?= fnGet($quote, 'brief_description') ?></h1>
+<h2><?= price(fnGet($quote, 'amount')) ?></h2>
+<h3><?= __('Select payment method'); ?></h3>
 <form method="post" action="<?= url('pay/order/place', null, true) ?>" enctype="application/x-www-form-urlencoded">
-    <?php foreach (View::getParam('gateways') as $gatewayName => $gateway) { ?>
+    <?php foreach (View::getParam('gateways', []) as $gatewayName => $gateway) { ?>
         <?php foreach (fnGet($gateway, 'methods', []) as $methodName => $method) { ?>
-            <div class="payment-method-<?= $gatewayName?>-<?= $methodName?>">
+            <div class="payment-method payment-method-<?= $gatewayName ?>-<?= $methodName ?>">
                 <label>
                     <input type="radio" name="payment_method" value="<?= $gatewayName . '.' . $methodName ?>">
-                    <span class="gateway-label"><?= fnGet($gateway, 'label') ?></span>
-                    <span class="method-label"><?= fnGet($method, 'label') ?></span>
+                    <span class="gateway-label"><?= __(fnGet($gateway, 'label')) ?></span>
+                    <span class="separator">-</span>
+                    <span class="method-label"><?= __(fnGet($method, 'label')) ?></span>
                 </label>
             </div>
         <?php } ?>

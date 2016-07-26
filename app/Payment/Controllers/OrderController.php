@@ -8,20 +8,33 @@ use Phwoolcon\Controller;
 use Phwoolcon\Log;
 use Phwoolcon\Model\User;
 use Phwoolcon\Payment\Exception\GeneralException;
+use Phwoolcon\Payment\Exception\OrderException;
 use Phwoolcon\Payment\Process\Payload;
 use Phwoolcon\Payment\Processor;
 
 class OrderController extends Controller
 {
 
+    public function getDemoRequestForm()
+    {
+        $gateways = Config::get('payment.gateways');
+        $user = new User();
+        $user->setId($this->input('user_identifier'))
+            ->setUsername($this->input('user_identifier'));
+        $quote = [
+            'quote_id' => $this->input('trade_id'),
+            'amount' => $this->input('amount'),
+            'brief_description' => $this->input('product_name'),
+            'client_id' => $this->input('client_id'),
+            'user' => $user,
+        ];
+        $this->render('payment', 'demo-request-form', compact('gateways', 'quote'));
+    }
+
     public function getForm()
     {
         $gateways = Config::get('payment.gateways');
-        $this->render('payment', 'form', compact('gateways'));
-    }
-
-    public function postPlace()
-    {
+        $paymentMethod = explode('.', $this->input('payment_method'));
         // TODO use real quote model
         $quote = [
             'quote_id' => md5(microtime()),
@@ -29,11 +42,18 @@ class OrderController extends Controller
             'user' => Auth::getUser(),
             'brief_description' => 'Test product',
             'client_id' => 'test_client',
+            'gateway' => fnGet($paymentMethod, 0),
+            'method' => fnGet($paymentMethod, 1),
         ];
+        $this->render('payment', 'form', compact('gateways', 'quote'));
+    }
+
+    protected function placeOrder($quote)
+    {
         /* @var User $user */
         $user = $quote['user'];
         try {
-            $paymentMethod = explode('.', $this->request->get('payment_method'));
+            $paymentMethod = explode('.', $this->input('payment_method'));
             $payload = Processor::run(Payload::create([
                 'gateway' => fnGet($paymentMethod, 0),
                 'method' => fnGet($paymentMethod, 1),
@@ -55,10 +75,44 @@ class OrderController extends Controller
         } catch (GeneralException $e) {
             Log::error($e->getMessage());
             $message = __('Invalid payment method');
+        } catch (OrderException $e) {
+            Log::error($e->getMessage());
+            $message = $e->getMessage();
         } catch (Exception $e) {
             Log::exception($e);
             $message = __('Internal server error');
         }
         return $this->render('page', 'single-message', ['message' => $message]);
+    }
+
+    public function postPlace()
+    {
+        $paymentMethod = explode('.', $this->input('payment_method'));
+        // TODO use real quote model
+        $quote = [
+            'quote_id' => md5(microtime()),
+            'amount' => 0.01,
+            'user' => Auth::getUser(),
+            'brief_description' => 'Test product',
+            'client_id' => 'test_client',
+            'gateway' => fnGet($paymentMethod, 0),
+            'method' => fnGet($paymentMethod, 1),
+        ];
+        return $this->placeOrder($quote);
+    }
+
+    public function postRequest()
+    {
+        $user = new User();
+        $user->setId($this->input('user_identifier'))
+            ->setUsername($this->input('user_identifier'));
+        $quote = [
+            'quote_id' => $this->input('trade_id'),
+            'amount' => $this->input('amount'),
+            'brief_description' => $this->input('product_name'),
+            'client_id' => $this->input('client_id'),
+            'user' => $user,
+        ];
+        return $this->placeOrder($quote);
     }
 }

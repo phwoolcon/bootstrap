@@ -51,9 +51,17 @@ $this->prefix('/api', [
 ])->prefix('/pay', [
     'GET' => [
         '/form' => 'Payment\Controllers\OrderController::getForm',
+        '/demo-request-form' => 'Payment\Controllers\OrderController::getDemoRequestForm',
     ],
     'POST' => [
         '/order/place' => 'Payment\Controllers\OrderController::postPlace',
+        '/order/request' => 'Payment\Controllers\OrderController::postRequest',
+    ],
+])->prefix('/catalog', [
+    'GET' => [
+        '/' => function () {
+            return View::make('catalog', 'index', ['page_title' => __('Catalog') . ' - Phwoolcon']);
+        },
     ],
 ]);
 

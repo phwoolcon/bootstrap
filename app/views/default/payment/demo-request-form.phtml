@@ -1,0 +1,57 @@
+<?php
+/* @var Phwoolcon\View\Engine\Php $this */
+?>
+<h1><?= __('Demo Request Form') ?></h1>
+<form method="post" action="<?= url('pay/order/request', null, true) ?>" enctype="application/x-www-form-urlencoded">
+    <ul class="non-list">
+        <li>
+            <label>
+                <span class="label">trade_id</span>
+                <input type="text" name="trade_id" value="<?= Session::getFormData('trade_id') ?>">
+            </label>
+        </li>
+        <li>
+            <label>
+                <span class="label">amount ￥</span>
+                <input type="text" name="amount" value="<?= Session::getFormData('amount') ?>">
+            </label>
+        </li>
+        <li>
+            <label>
+                <span class="label">product_name</span>
+                <input type="text" name="product_name" value="<?= Session::getFormData('product_name') ?>">
+            </label>
+        </li>
+        <li>
+            <label>
+                <span class="label">client_id</span>
+                <input type="text" name="client_id" value="<?= Session::getFormData('client_id') ?>">
+            </label>
+        </li>
+        <li>
+            <label>
+                <span class="label">user_identifier</span>
+                <input type="text" name="user_identifier" value="<?= Session::getFormData('user_identifier') ?>">
+            </label>
+        </li>
+    </ul>
+    <h3><?= __('Select payment method'); ?></h3>
+    <?php foreach (View::getParam('gateways', []) as $gatewayName => $gateway) { ?>
+        <?php foreach (fnGet($gateway, 'methods', []) as $methodName => $method) { ?>
+            <div class="payment-method payment-method-<?= $gatewayName ?>-<?= $methodName ?>">
+                <label>
+                    <input type="radio" name="payment_method" value="<?= $gatewayName . '.' . $methodName ?>">
+                    <span class="gateway-label"><?= __(fnGet($gateway, 'label')) ?></span>
+                    <span class="separator">-</span>
+                    <span class="method-label"><?= __(fnGet($method, 'label')) ?></span>
+                </label>
+            </div>
+        <?php } ?>
+    <?php } ?>
+    <div>
+        <button type="submit"><?= __('Place Order') ?></button>
+    </div>
+    <div class="hidden">
+        <input type="hidden" name="_token" value="<?= Session::getCsrfToken(true); ?>" autocomplete="off">
+    </div>
+</form>

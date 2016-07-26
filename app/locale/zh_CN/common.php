@@ -4,6 +4,7 @@ return [
     '404 NOT FOUND' => '404 页面找不到',
     '500 INTERNAL SERVER ERROR' => '500 服务器内部错误',
     'About Us' => '关于我们',
+    'Catalog' => '商品分类',
     'CSRF Token Verification Failed' => 'CSRF Token 校验失败',
     'Go back' => '返回',
     'Home' => '首页',
