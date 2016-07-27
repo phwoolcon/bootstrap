@@ -9,6 +9,10 @@ $this->prefix('/api', [
                 ->setJsonContent(['content' => 'Phwoolcon Bootstrap'])
                 ->setHeader('Content-Type', 'application/json');
         },
+        '/alipay/demo-request-form' => 'Payment\Controllers\Api\AlipayController::getDemoRequestForm',
+    ],
+    'POST' => [
+        '/alipay/pay-request' => 'Payment\Controllers\Api\AlipayController::postRequest',
     ],
 ], MultiFilter::instance()
     ->add(DisableSessionFilter::instance())
@@ -51,11 +55,9 @@ $this->prefix('/api', [
 ])->prefix('/pay', [
     'GET' => [
         '/form' => 'Payment\Controllers\OrderController::getForm',
-        '/demo-request-form' => 'Payment\Controllers\OrderController::getDemoRequestForm',
     ],
     'POST' => [
         '/order/place' => 'Payment\Controllers\OrderController::postPlace',
-        '/order/request' => 'Payment\Controllers\OrderController::postRequest',
     ],
 ])->prefix('/catalog', [
     'GET' => [

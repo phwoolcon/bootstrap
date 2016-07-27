@@ -125,3 +125,8 @@ ul.non-list, ul.non-list li{
     background:#147;
     /* darken(@btn-d-bg, 10%) */
 }
+
+form .label{
+    display:inline-block;
+    width:150px;
+}

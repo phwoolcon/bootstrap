@@ -15,22 +15,6 @@ use Phwoolcon\Payment\Processor;
 class OrderController extends Controller
 {
 
-    public function getDemoRequestForm()
-    {
-        $gateways = Config::get('payment.gateways');
-        $user = new User();
-        $user->setId($this->input('user_identifier'))
-            ->setUsername($this->input('user_identifier'));
-        $quote = [
-            'quote_id' => $this->input('trade_id'),
-            'amount' => $this->input('amount'),
-            'brief_description' => $this->input('product_name'),
-            'client_id' => $this->input('client_id'),
-            'user' => $user,
-        ];
-        $this->render('payment', 'demo-request-form', compact('gateways', 'quote'));
-    }
-
     public function getForm()
     {
         $gateways = Config::get('payment.gateways');
@@ -97,21 +81,6 @@ class OrderController extends Controller
             'client_id' => 'test_client',
             'gateway' => fnGet($paymentMethod, 0),
             'method' => fnGet($paymentMethod, 1),
-        ];
-        return $this->placeOrder($quote);
-    }
-
-    public function postRequest()
-    {
-        $user = new User();
-        $user->setId($this->input('user_identifier'))
-            ->setUsername($this->input('user_identifier'));
-        $quote = [
-            'quote_id' => $this->input('trade_id'),
-            'amount' => $this->input('amount'),
-            'brief_description' => $this->input('product_name'),
-            'client_id' => $this->input('client_id'),
-            'user' => $user,
         ];
         return $this->placeOrder($quote);
     }

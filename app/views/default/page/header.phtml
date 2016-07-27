@@ -11,6 +11,7 @@ if (View::noHeader()) {
         <div class="container">
             <a href="<?= url(''); ?>" class="page-name"><?= __('Home'); ?></a>
             <a href="<?= url('catalog'); ?>"><?= __('Catalog'); ?></a>
+            <a href="<?= url('api/alipay/demo-request-form'); ?>"><?= __('Payment API'); ?></a>
             <?php if (Auth::getUser()) { ?>
                 <a href="<?= url('account'); ?>"><?= __('My Account'); ?></a>
                 <a href="<?= url('account/logout'); ?>"><?= __('Logout'); ?></a>
