@@ -16,4 +16,5 @@ return [
     'Submit' => '提交',
     'Terms of Service' => '服务条款',
     'This form is outdated. Please go back and submit again.' => '网页已经过期，请后退并重新提交表单。',
+    '[url]View source code[/url] on github.com' => '在 github.com 上 <a href="%url%" target="_blank">查看源代码</a>',
 ];

@@ -16,4 +16,5 @@ return [
     'Submit' => 'Submit',
     'Terms of Service' => 'Terms of Service',
     'This form is outdated. Please go back and submit again.' => 'This form is outdated. Please go back and submit again.',
+    '[url]View source code[/url] on github.com' => '<a href="%url%" target="_blank">View source code</a> on github.com',
 ];
