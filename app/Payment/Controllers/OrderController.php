@@ -9,11 +9,29 @@ use Phwoolcon\Log;
 use Phwoolcon\Model\User;
 use Phwoolcon\Payment\Exception\GeneralException;
 use Phwoolcon\Payment\Exception\OrderException;
+use Phwoolcon\Payment\Model\Order;
 use Phwoolcon\Payment\Process\Payload;
 use Phwoolcon\Payment\Processor;
 
 class OrderController extends Controller
 {
+
+    public function getDemoRequestForm()
+    {
+        $this->addPageTitle(__('Payment API'));
+        $gateways = Config::get('payment.gateways');
+        $user = new User();
+        $user->setId($this->input('user_identifier'))
+            ->setUsername($this->input('user_identifier'));
+        $quote = [
+            'quote_id' => $this->input('trade_id'),
+            'amount' => $this->input('amount'),
+            'brief_description' => $this->input('product_name'),
+            'client_id' => $this->input('client_id'),
+            'user' => $user,
+        ];
+        $this->render('payment', 'alipay/demo-request-form', compact('gateways', 'quote'));
+    }
 
     public function getForm()
     {
@@ -32,6 +50,10 @@ class OrderController extends Controller
         $this->render('payment', 'form', compact('gateways', 'quote'));
     }
 
+    /**
+     * @param $quote
+     * @return Order|string
+     */
     protected function placeOrder($quote)
     {
         /* @var User $user */
@@ -53,20 +75,20 @@ class OrderController extends Controller
             ]));
             $result = $payload->getResult();
             if ($order = $result->getOrder()) {
-                return $this->redirect($order->getPaymentGatewayUrl());
+                return $order;
             }
-            $message = $result->getError();
+            $error = $result->getError();
         } catch (GeneralException $e) {
             Log::error($e->getMessage());
-            $message = __('Invalid payment method');
+            $error = ['code' => $e->getCode(), 'message' => __('Invalid payment method')];
         } catch (OrderException $e) {
             Log::error($e->getMessage());
-            $message = $e->getMessage();
+            $error = ['code' => $e->getCode(), 'message' => $e->getMessage()];
         } catch (Exception $e) {
             Log::exception($e);
-            $message = __('Internal server error');
+            $error = ['code' => 500, 'message' => __('Internal server error')];
         }
-        return $this->render('page', 'single-message', ['message' => $message]);
+        return $error;
     }
 
     public function postPlace()
@@ -82,6 +104,10 @@ class OrderController extends Controller
             'gateway' => fnGet($paymentMethod, 0),
             'method' => fnGet($paymentMethod, 1),
         ];
-        return $this->placeOrder($quote);
+        $result = $this->placeOrder($quote);
+        if ($result instanceof Order) {
+            return $this->redirect($result->getPaymentGatewayUrl());
+        }
+        return $this->render('page', 'single-message', $result);
     }
 }

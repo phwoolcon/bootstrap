@@ -3,13 +3,13 @@
 
 $this->prefix('/api', [
     'GET' => [
+        '/:params' => 'Payment\Controllers\Api\AlipayController::missingMethod',
         '/' => function () {
             return Phalcon\Di::getDefault()
                 ->getShared('response')
                 ->setJsonContent(['content' => 'Phwoolcon Bootstrap'])
                 ->setHeader('Content-Type', 'application/json');
         },
-        '/alipay/demo-request-form' => 'Payment\Controllers\Api\AlipayController::getDemoRequestForm',
     ],
     'POST' => [
         '/alipay/pay-request' => 'Payment\Controllers\Api\AlipayController::postRequest',
@@ -55,6 +55,7 @@ $this->prefix('/api', [
 ])->prefix('/pay', [
     'GET' => [
         '/form' => 'Payment\Controllers\OrderController::getForm',
+        '/demo-request-form' => 'Payment\Controllers\OrderController::getDemoRequestForm',
     ],
     'POST' => [
         '/order/place' => 'Payment\Controllers\OrderController::postPlace',
