@@ -4,6 +4,8 @@
 use Phwoolcon\Cache;
 use Phwoolcon\Config;
 use Phwoolcon\Db;
+use Phwoolcon\DiFix;
+use Phwoolcon\Events;
 
 $baseDir = dirname(dirname(__DIR__));
 $vendorDir = $baseDir . '/vendor';
@@ -22,6 +24,8 @@ if ($firstRun) {
     $assetsDir = 'assets';
     $replaceConfig = true;
 } else {
+    Events::register($di);
+    DiFix::register($di);
     Db::register($di);
     Cache::register($di);
     Config::register($di);
