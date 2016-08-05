@@ -2,6 +2,7 @@
 /* @var Phwoolcon\View\Engine\Php $this */
 $quote = View::getParam('quote');
 ?>
+<h3><?= __('This page is just a demonstration, please do NOT make any real payments') ?></h3>
 <h1><?= fnGet($quote, 'brief_description') ?></h1>
 <h2><?= price(fnGet($quote, 'amount')) ?></h2>
 <h3><?= __('Select payment method'); ?></h3>
