@@ -7,7 +7,7 @@ error_reporting(-1);
 
 include ROOT_PATH . '/bootstrap/functions.php';
 include ROOT_PATH . '/bootstrap/start.php';
-include ROOT_PATH . '/bootstrap/di.php';
+include ROOT_PATH . '/vendor/phwoolcon/di.php';
 
 $loader->registerNamespaces([
     'Tests' => ROOT_PATH . '/tests',
