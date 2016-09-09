@@ -18,7 +18,8 @@
         "phwoolcon/payment": "~1.0"
     },
     "require-dev": {
-        "techpivot/phalcon-ci-installer": "~1.0"
+        "techpivot/phalcon-ci-installer": "~1.0",
+        "phwoolcon/demo": "~1.0"
     },
     "autoload": {
         "classmap": [
@@ -46,12 +47,6 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
-        }
-    },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https?://packagist.org"
         }
     }
 }
