@@ -31,9 +31,15 @@ $request = [
 ];
 
 $request = serialize($request);
-$request = pack('N', strlen($request)) . $request;
+$request = pack('N', $length = strlen($request)) . $request;
 
-$client->send($request);
+if ($length > 2097152) {
+    foreach (str_split($request, 1048576) as $chunk) {
+        $client->send($chunk);
+    }
+} else {
+    $client->send($request);
+}
 $response = $client->recv();
 $client->close();
 
