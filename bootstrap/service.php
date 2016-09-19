@@ -7,7 +7,11 @@ if (!empty($_SERVER['DEV_MODE']) && !empty($_REQUEST['fpm'])) {
 $config = is_file($configFile = dirname(__DIR__) . '/app/config/production/service.php') ? include($configFile) : [];
 $runDir = isset($config['run_dir']) ? $config['run_dir'] : '/tmp/phwoolcon/';
 
-$port = include($runDir . 'service-port.php');
+if (!is_file($portFile = $runDir . 'service-port.php')) {
+    return;
+}
+
+$port = include($portFile);
 
 $sockFile = $runDir . 'service-' . $port . '.sock';
 $client = new swoole_client(SWOOLE_UNIX_STREAM);
