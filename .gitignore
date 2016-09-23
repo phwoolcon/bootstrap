@@ -3,6 +3,7 @@
 /ignore/
 /app/config/
 /app/locale/
+/app/views/
 /bin/install/packages/
 /storage/
 /public/assets/compiled/
