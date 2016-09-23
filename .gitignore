@@ -2,6 +2,7 @@
 /vendor/
 /ignore/
 /app/config/
+/app/locale/
 /bin/install/packages/
 /storage/
 /public/assets/compiled/
