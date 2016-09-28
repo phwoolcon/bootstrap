@@ -5,6 +5,7 @@
 /app/locale/
 /app/views/
 /bin/install/packages/
+/bin/migrations/
 /storage/
 /public/assets/compiled/
 /public/assets/base/packages/
