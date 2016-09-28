@@ -11,6 +11,5 @@ include ROOT_PATH . '/vendor/phwoolcon/di.php';
 
 use Phwoolcon\Cli;
 
-$_SERVER['PHWOOLCON_MIGRATION_PATH'] = ROOT_PATH . '/bin/migrations';
 $app = Cli::register($di);
 $app->run();
