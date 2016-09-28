@@ -4,9 +4,9 @@ use Phalcon\Di\FactoryDefault;
 use Phalcon\Loader;
 
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(__DIR__));
-$_SERVER['PHWOOLCON_ROOT_PATH'] = ROOT_PATH;
-$_SERVER['PHWOOLCON_CONFIG_PATH'] = ROOT_PATH . '/app/config';
-$_SERVER['PHWOOLCON_MIGRATION_PATH'] = ROOT_PATH . '/bin/migrations';
+isset($_SERVER['PHWOOLCON_ROOT_PATH']) or $_SERVER['PHWOOLCON_ROOT_PATH'] = ROOT_PATH;
+isset($_SERVER['PHWOOLCON_CONFIG_PATH']) or $_SERVER['PHWOOLCON_CONFIG_PATH'] = ROOT_PATH . '/app/config';
+isset($_SERVER['PHWOOLCON_MIGRATION_PATH']) or $_SERVER['PHWOOLCON_MIGRATION_PATH'] = ROOT_PATH . '/bin/migrations';
 
 if (!extension_loaded('phalcon')) {
     echo $error = 'Extension "phalcon" not detected, please install or activate it.';
