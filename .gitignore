@@ -8,5 +8,5 @@
 /bin/migrations/
 /storage/
 /public/assets/compiled/
-/public/assets/base/packages/
+/public/assets/packages/
 /composer.local.json
