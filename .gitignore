@@ -7,6 +7,6 @@
 /bin/install/packages/
 /bin/migrations/
 /storage/
-/public/assets/compiled/
-/public/assets/packages/
+/public/assets/
+/public/static/
 /composer.local.json
