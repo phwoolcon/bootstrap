@@ -1,0 +1,9 @@
+.git
+/.idea
+/app/config
+/app/views
+/app/locale
+/bin/migrations
+/public/assets
+/public/static
+/storage
