@@ -1,0 +1,11 @@
+.DS_Store
+/.idea/
+/ignore/
+/app/config/
+/app/locale/
+/app/views/
+/bin/install/packages/
+/bin/migrations/
+/storage/
+/public/assets/
+/public/static/

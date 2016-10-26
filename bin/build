@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )")"
 
-rsync -auv --delete --exclude-from=./deployignore ./ ./ignore/release/
+rsync -auv --delete --exclude=.gitignore.dist --exclude=.gitignore --exclude-from=./deployignore ./ ./ignore/release/
+cp .gitignore.dist ./ignore/release/.gitignore
