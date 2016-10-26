@@ -1,9 +1,12 @@
 .git
-/.idea
+.idea/
 /app/config
 /app/views
 /app/locale
 /bin/migrations
+/ignore
 /public/assets
 /public/static
 /storage
+/vendor/*/*/vendor/
+tests/root/storage/

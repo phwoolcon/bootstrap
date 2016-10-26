@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )")"
+
+rsync -auv --delete --exclude-from=./deployignore ./ ./ignore/release/
