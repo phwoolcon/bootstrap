@@ -1,5 +1,27 @@
 #!/usr/bin/env bash
 cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )")"
 
-rsync -auv --delete --exclude=.gitignore.dist --exclude=.gitignore --exclude-from=./deployignore ./ ./ignore/release/
+if [ -d "ignore/release/.git" ]; then
+    echo "Fetch upstream"
+    cd ignore/release
+    git fetch
+    cd ../..
+fi
+
+echo "Clean release directory"
+rm -rf ignore/release/*
+
+echo "Building ..."
+rsync -au --delete --exclude=.gitignore.dist --exclude=.gitignore --exclude-from=./deployignore ./ ./ignore/release/
 cp .gitignore.dist ./ignore/release/.gitignore
+echo "Release built successfully"
+
+if [ -d "ignore/release/.git" ]; then
+    cd ignore/release
+    git add ./
+    echo "New files added to git"
+    echo "Local changes:"
+    echo
+    git status
+    cd ../..
+fi
