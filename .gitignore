@@ -10,4 +10,5 @@
 /storage/
 /public/assets/
 /public/static/
+/public/uploads/
 /composer.local.json
