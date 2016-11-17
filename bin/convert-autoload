@@ -10,8 +10,13 @@ $phalconPsr4 = ROOT_PATH . '/vendor/composer/autoload_phalcon_psr4.php';
 
 $content = strtr(file_get_contents($composerPsr4), [
     "\\\\'" => "'",
-    'array($vendorDir' => '($vendorDir',
-    'array($baseDir' => '($baseDir',
+    /**
+     * Phalcon > 2.1.0 supports multiple directories
+     * @see https://github.com/phalcon/cphalcon/issues/11021
+     * So we don't need following 2 lines anymore
+     */
+//    'array($vendorDir' => '($vendorDir',
+//    'array($baseDir' => '($baseDir',
 ]);
 file_put_contents($phalconPsr4, $content);
 
