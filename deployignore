@@ -5,8 +5,7 @@
 /app/locale
 /bin/migrations
 /ignore
-/public/assets
-/public/static
+/public/*/
 /storage
 /vendor/*/*/vendor/
 tests/root/storage/
