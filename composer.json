@@ -37,7 +37,7 @@
         ],
         "post-autoload-dump": [
             "bin/convert-autoload",
-            "bin/cli clear:cache -calm"
+            "bin/cli clear:cache -calmr"
         ]
     },
     "extra": {
