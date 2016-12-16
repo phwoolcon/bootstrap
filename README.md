@@ -13,7 +13,7 @@ use at your own risk!
 
 > ## EASY TO USE
 
-The bootstrap project provides directory structures to use Phwoolcon.
+The Bootstrap provides directory structure for running Phwoolcon.
 
 The purpose of this project is to create a high performance  
 web application, which can run in traditional php-fpm mode and  
@@ -33,15 +33,15 @@ but you can install Linux on Windows by VirtualBox or other virtual machines)
 * PHP version >= 5.5 (5.6 or 7.0 is recommended, year 2016)
 * PHP components: fpm, gd, cli, curl, dev, json, mbstring, mcrypt, pdo-mysql, xml, zip
 * MySQL server (or MariaDB / Percona)
-* Phalcon (Latest version)
+* Phalcon (Latest version recommended)
 * Swoole 1.8.13 (Phwoolcon has unfixed compatibility issue with Swoole 1.9)
-* Composer (Latest version)
+* Composer (Latest version recommended)
 
 # 2. Usage
 ## 2.1. Create Working Directory
-Create your project by composer, with `--keep-vcs` option:
+Create a working directory by composer, with `--keep-vcs` option:
 ```bash
-composer create-project --keep-vcs "phwoolcon/bootstrap" my-project-name
+composer create-project -salpha --keep-vcs "phwoolcon/bootstrap" my-project-name
 cd my-project-name
 ```
 
@@ -80,7 +80,8 @@ All project codes will be organized as composer packages.
 **NEVER** put your codes into the `app/` directory, that make it complicated to implement modularization.
 
 ### 2.3.1 Create Project Composer Package
-If you are the first time to use Phwoolcon, create a new repository for your project codes:
+If you are the first time to use Phwoolcon, create a new repository  
+in the `vendor` directory, for your project codes:
 ```bash
 mkdir -p vendor/my/project
 cd vendor/my/project
@@ -144,12 +145,12 @@ git remote add origin git@git.example.com:my/project.git
 git push
 ```
 
-Now you have a private composer repository, your first Phwoolcon package.
+Now you have a private composer repository, your first `Phwoolcon package`.
 
 If you want to share it to others, you can publish it on [Github](https://github.com) and [Packagist](https://packagist.org).
 
 ### 2.3.2. Fetch Upstream Codes
-Return to your working directory (i.e. the bootstrap directory),  
+Return to your working directory (i.e. the Phwoolcon Bootstrap directory),  
 and then pull upstream codes:
 ```bash
 cd ../../..
@@ -170,13 +171,14 @@ Adding new copies into `app/config/{$environment}/` to override default values.
 You can change this name by setting `$_SERVER['PHWOOLCON_ENV']`.
 
 ### 2.4.2. Add Custom Configuration Files
-You may add new configuration files under your package directory `phwoolcon-package/config/`.
+Return to your project package (i.e. `vendor/my/project`),  
+you may add new configuration files under `phwoolcon-package/config/`.
 
 Then run `bin/dump-autoload` to symlink it to `app/config`.
 
 Get the config values in your codes, for example:
 
-`phwoolcon-package/config/key.php`
+Config file `phwoolcon-package/config/key.php`
 ```php
 <?php
 return [
@@ -185,6 +187,9 @@ return [
     ],
 ];
 ```
+
+In your code:
+
 ```php
 echo Config::get('key.to.config'); // Prints "hello"
 ```
@@ -192,9 +197,14 @@ echo Config::get('key.to.config'); // Prints "hello"
 **IMPORTANT** Please **DO NOT** create config file with the default names.
 
 ## 2.5. Modularization
-You may have some common components in different projects,  
-organize them as Phwoolcon packages, create composer repositories,  
-and then introduce them into projects, add them in project's `composer.json`
+Code reusing, modularization, the implementation is not as simple as it looks,  
+have you ever copy-pasted such "modules" among projects?
+
+Phwoolcon makes it simple:
+
+* First, make your project as a `Phwoolcon package`;
+* Then, make all your common components as `Phwoolcon packages`;
+* Finally, add them to `composer.json` in your project package.
 
 **IMPORTANT** Any private repositories **MUST** be declared in the `repositories` section  
 in the file `composer.local.json`, which was created in step [2.2.](#s2.2)
@@ -215,7 +225,7 @@ bin/build
 ```
 
 The build script will create `ignore/release` directory, which is  
-ready to be push to the production environment.
+ready to be pushed to the production environment.
 
 Push them to your project repository, in branch `release`.
 
