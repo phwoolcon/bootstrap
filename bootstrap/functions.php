@@ -79,7 +79,10 @@ function sendHttpStatus($code)
     }
 }
 
-function exceptionHandler(Exception $exception)
+/**
+ * @param Throwable $exception
+ */
+function exceptionHandler($exception)
 {
     profilerStop();
     Log::exception($exception);
