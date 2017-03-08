@@ -11,4 +11,4 @@
 /public/assets/
 /public/static/
 /public/uploads/
-/composer.local.json
+/composer.local*.json

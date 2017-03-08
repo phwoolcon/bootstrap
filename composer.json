@@ -47,7 +47,7 @@
         },
         "merge-plugin": {
             "include": [
-                "composer.local.json"
+                "composer.local*.json"
             ]
         }
     }
