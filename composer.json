@@ -30,6 +30,9 @@
         ]
     },
     "scripts": {
+        "pre-update-cmd": [
+            "bin/import-package"
+        ],
         "post-install-cmd": [
             "bin/install/generate-cookie-encrypt-key"
         ],
