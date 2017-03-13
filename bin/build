@@ -5,6 +5,7 @@ if [ -d "ignore/release/.git" ]; then
     echo "Fetch upstream"
     cd ignore/release
     git fetch
+    git reset --hard FETCH_HEAD --
     cd ../..
 fi
 
