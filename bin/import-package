@@ -34,11 +34,15 @@ if (isset($cliOptions['h']) || isset($cliOptions['help'])) {
         '    -v,    --verbose       Show more output messages',
         '',
         '  Arguments:',
-        "    <repo>                 The URL to the package's git repository. for example:",
-        '                           git@github.com:phwoolcon/demo.git',
-        '                           git@example.com:your-group/your-project.git',
+        "    <repo>                 The package's git repository. for example:",
+        '                               git@github.com:phwoolcon/demo.git           (Github repository)',
+        '                               phwoolcon/demo                              (Identical to Github)',
+        '                               git@example.com:your-group/your-project.git (Self hosted repository)',
+        "                           Or a http URL to composer.local.json, for example:",
+        '                               http://example.com/composer.local.json',
+        '                               https://raw.githubusercontent.com/phwoolcon/demo/master/composer.local.json',
         '',
-        '    <branch>               Only use this argument for git URL, default "master"',
+        '    <branch>               Only use this argument for git repository, default "master"',
     ]);
     exit(0);
 }
@@ -140,6 +144,9 @@ function getGitFile($url, $branch = 'master', $file = 'composer.local.json')
         $mode = 'git';
     } elseif (Text::startsWith($url, 'http://') || Text::startsWith($url, 'https://')) {
         $mode = 'http';
+    } elseif (preg_match('|^[^/^:]+/[^/^:^.]+$|', $url)) {
+        $mode = 'http';
+        $url = $githubHttpsPrefix . $url . "/{$branch}/{$file}";
     }
     $unableToDownloadMessage = "Unable to import package from {$rawUrl}";
     switch ($mode) {
