@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )")"
 
+function error {
+    echo $1
+    exit 1
+}
+
+if [ -d ".git" ]; then
+    echo "> git pull"
+    git pull || error "Error $? while updating bootstrap"
+fi
+
+echo "> composer update"
+composer update || error "Error $? while updating composer packages"
+bin/cli migrate:up || error "Error while running migrations"
+bin/dump-autoload || error "Error while dumping autoload"
+
 if [ -d "ignore/release/.git" ]; then
     echo "Fetch upstream"
     cd ignore/release
