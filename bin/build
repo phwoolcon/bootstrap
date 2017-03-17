@@ -13,7 +13,9 @@ fi
 
 echo "> composer update"
 composer update || error "Error $? while updating composer packages"
+echo "> bin/cli migrate:up"
 bin/cli migrate:up || error "Error while running migrations"
+echo "> bin/dump-autoload"
 bin/dump-autoload || error "Error while dumping autoload"
 
 if [ -d "ignore/release/.git" ]; then
