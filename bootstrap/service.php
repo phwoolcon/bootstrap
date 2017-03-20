@@ -44,17 +44,24 @@ if ($length > 2097152) {
 } else {
     $client->send($request);
 }
-$response = $client->recv();
-$client->close();
-
-if ($response === false) {
+if ($rounds = $client->recv()) {
+    $roundsLength = unpack('N', $rounds)[1];
+    $rounds = substr($rounds, -$roundsLength);
+    $response = '';
+    for (; $rounds > 0; --$rounds) {
+        $responseChunk = $client->recv();
+        $chunkLength = unpack('N', $responseChunk)[1];
+        $response .= substr($responseChunk, -$chunkLength);
+    }
+    $client->close();
+} else {
+    $client->close();
     header('Bad Gateway', true, 502);
     echo '<html><head><title>502 Bad Gateway</title></head><body bgcolor="white"><center><h1>502 Bad Gateway</h1></center><hr><center>nginx</center><div style="display:none">err ' . $client->errCode . ': ' . swoole_strerror($client->errCode) . '</div></body></html>';
     exit;
 }
 
-$length = unpack('N', $response)[1];
-$response = unserialize(substr($response, -$length));
+$response = unserialize($response);
 
 if (isset($response['headers']) && $headers = $response['headers']) {
     isset($headers['status']) and header($headers['status'], true);
