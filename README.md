@@ -30,18 +30,17 @@ fix your bugs and apply service mode again.
 * Linux or MacOS (Windows is neither recommended nor tested,  
 but you can install Linux on Windows by VirtualBox or other virtual machines)
 * Nginx (Latest version recommended)
-* PHP version >= 5.5 (5.6 or 7.0 is recommended, year 2016)
-* PHP components: fpm, gd, cli, curl, dev, json, mbstring, mcrypt, pdo-mysql, xml, zip
-* MySQL server (or MariaDB / Percona)
+* PHP version >= 5.5 (7.0 is recommended, year 2017)
+* PHP components: fpm, gd, cli, curl, dev, json, mbstring, mcrypt, pdo-mysql, redis, xml, zip
+* MySQL server (or MariaDB / Percona / TiDB)
 * Phalcon (Latest version recommended)
-* Swoole 1.8.13 (Phwoolcon has unfixed compatibility issue with Swoole 1.9)
+* Swoole (Latest version recommended)
 * Composer (Latest version recommended)
 
 # 2. Usage
 ## 2.1. Create Working Directory
-Create a working directory by composer, with `--keep-vcs` option:
 ```bash
-composer create-project -salpha --keep-vcs "phwoolcon/bootstrap" my-project-name
+git clone git@github.com:phwoolcon/bootstrap.git my-project-name
 cd my-project-name
 ```
 
@@ -237,6 +236,49 @@ rsync -auv --delete --chown=www-data:www-data --rsync-path='sudo rsync' \
     user@production-host:/path/to/production/directory/
 ssh www-data@production-host \
     '/path/to/production/directory/bin/dump-autoload'
+```
+
+## 2.7. Service Mode
+
+### 2.7.1. Enable Service Mode
+To enable service mode, please set CGI parameter `USE_SERVICE` to 1.
+```conf
+    location ~ \.php$ {
+        .
+        .
+        .
+        fastcgi_param USE_SERVICE 1;
+    }
+```
+
+### 2.7.2. Start Service
+To start the service, please run:
+```bash
+bin/cli service start
+```
+Now the phwoolcon service handles your site.
+
+To stop the service, please run:
+```bash
+bin/cli service stop
+```
+Now your site is still available in php-fpm mode.
+
+### 2.7.3. Install As System Service (Incomplete)
+Run this command to install your project as a system service:
+```bash
+bin/cli service install
+```
+Then you can start/stop/restart/reload your service by:
+```bash
+service phwoolcon start
+service phwoolcon stop
+service phwoolcon restart
+service phwoolcon reload
+```
+To uninstall the service:
+```bash
+bin/cli service uninstall
 ```
 
 # 3. Spirits
