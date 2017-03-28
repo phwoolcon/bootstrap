@@ -321,7 +321,15 @@ bin/cli service uninstall
 * Orders
 * Payment
 
-## 5. Appendix
+## 5. License
+Phwoolcon Bootstrap is licensed under the [Apache License 2.0](LICENSE)
+
+### 5.1. Third Party Software
+Phwoolcon Bootstrap uses third-party libraries or other resources that  
+may be distributed under licenses different than Phwoolcon, please  
+check [Third Party Licenses](3RD-PARTY-LICENSES.md) for details.
+
+## 6. Appendix
 > Software suppliers are trying to make their software packages more "user-friendly". Their best approach, so far, has been to take all the old brochures, and stamp the words, "user-friendly" on the cover.  
 >  
 > <div align="right">— Bill Gates</div>
