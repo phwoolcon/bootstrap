@@ -112,9 +112,6 @@ cat > composer.json << 'EOL'
             "/tests/"
         ]
     },
-    "bin": [
-        "phwoolcon-package/phwoolcon-package-my-project.php"
-    ],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
