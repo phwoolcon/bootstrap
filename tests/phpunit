@@ -1,3 +1,62 @@
 #!/usr/bin/env bash
 cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )")"
-phpunit --coverage-html storage/coverage
+
+function error {
+    if [[ $1 ]]; then
+        >&2 echo "$1"
+    fi
+    exit 1
+}
+
+usage() {
+    >&2 cat <<-EOF
+Usage: $0 [-r] [-h] [-v] [<package>]
+
+  Options:
+    -r         Re-choose package
+    -h         Show this help message and exit
+    -v         Show more output messages
+
+  Arguments:
+    <package>  The package to be tested
+EOF
+    exit 1
+}
+
+CHOSEN_CACHE_FILE='storage/phpunit-chosen-package'
+VERBOSITY=0
+
+while getopts "hrv?" o; do
+    case "${o}" in
+        r)
+            bin/cli phpunit:pick-package || error
+            shift
+            ;;
+        v)
+            (( VERBOSITY = VERBOSITY + 1 ))
+            shift
+            ;;
+        h | ? | *) # Display help.
+            usage
+            ;;
+    esac
+done
+
+if [[ $1 ]]; then
+    if [[ ! -d $1/phwoolcon-package ]]; then
+        error "$1 is not a phwoolcon package"
+    fi
+    CHOSEN_PACKAGE=$1
+else
+    if [[ ! -f ${CHOSEN_CACHE_FILE} ]]; then
+        bin/cli phpunit:pick-package || error
+    fi
+
+    CHOSEN_PACKAGE=$( < "${CHOSEN_CACHE_FILE}" )
+fi
+
+COVERAGE_HTML=storage/coverage/$( basename ${CHOSEN_PACKAGE} )
+echo Running phpunit on \"${CHOSEN_PACKAGE}\"...
+echo
+phpunit -c "${CHOSEN_PACKAGE}" --coverage-html "${COVERAGE_HTML}" || error
+echo Browse \"file://$( pwd )/${COVERAGE_HTML}/index.html\" for coverage report
