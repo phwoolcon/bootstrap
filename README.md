@@ -2,16 +2,9 @@
 
 Phalcon + Swoole
 
-[Demo](http://phwoolcon.com/)
+[Demo](https://phwoolcon.org/)
 
 ***
-
-**WARNING**: This project is in alpha stage of development,  
-use at your own risk!
-
-***
-
-> ## EASY TO USE
 
 The Bootstrap provides directory structure for running Phwoolcon.
 
@@ -30,7 +23,7 @@ fix your bugs and apply service mode again.
 * Linux or MacOS (Windows is neither recommended nor tested,  
 but you can install Linux on Windows by VirtualBox or other virtual machines)
 * Nginx (Latest version recommended)
-* PHP version >= 5.5 (7.0 is recommended, year 2017)
+* PHP version >= 5.5 (7.1 is recommended, year 2017)
 * PHP components: fpm, gd, cli, curl, dev, json, mbstring, mcrypt, pdo-mysql, redis, xml, zip
 * MySQL server (or MariaDB / Percona / TiDB)
 * Phalcon (Latest version recommended)
@@ -100,7 +93,6 @@ cat > composer.json << 'EOL'
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.5.0",
         "phwoolcon/phwoolcon": "~1.0"
     },
     "autoload": {
@@ -325,12 +317,5 @@ Phwoolcon Bootstrap is licensed under the [Apache License 2.0](LICENSE)
 Phwoolcon Bootstrap uses third-party libraries or other resources that  
 may be distributed under licenses different than Phwoolcon, please  
 check [Third Party Licenses](3RD-PARTY-LICENSES.md) for details.
-
-## 6. Appendix
-> Software suppliers are trying to make their software packages more "user-friendly". Their best approach, so far, has been to take all the old brochures, and stamp the words, "user-friendly" on the cover.  
->  
-> <div align="right">— Bill Gates</div>
-
-So did I.
 
 [中文](README-zh.md)

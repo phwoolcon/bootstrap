@@ -2,15 +2,9 @@
 
 Phalcon + Swoole
 
-[Demo](http://phwoolcon.com/)
+[Demo](https://phwoolcon.org/)
 
 ***
-
-**警告**：此项目现在处于 Alpha 版本开发状态，请慎重使用！
-
-***
-
-> ## 易于使用
 
 Bootstrap 用于提供 Phwoolcon 运行时的目录结构。
 
@@ -26,7 +20,7 @@ Bootstrap 用于提供 Phwoolcon 运行时的目录结构。
 * Linux 或者 MacOS（不推荐 Windows，也没测试过。
 不过你可以在 Windows 上用 VirtualBox 之类的虚拟机安装 Linux）
 * Nginx（推荐最新版本）
-* PHP version >= 5.5（推荐 7.0，2017 年注）
+* PHP version >= 5.5（推荐 7.1，2017 年注）
 * PHP 组件: fpm, gd, cli, curl, dev, json, mbstring, mcrypt, pdo-mysql, redis, xml, zip
 * MySQL server (或者 MariaDB / Percona / TiDB)
 * Phalcon（推荐最新版本）
@@ -96,7 +90,6 @@ cat > composer.json << 'EOL'
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.5.0",
         "phwoolcon/phwoolcon": "~1.0"
     },
     "autoload": {
@@ -320,10 +313,3 @@ Phwoolcon Bootstrap 采用 [Apache License 2.0](LICENSE) 进行许可
 ### 5.1. 第三方软件
 Phwoolcon Bootstrap 使用了第三方库和其他资源，它们可能采用了与 Phwoolcon  
 不同的许可证进行发布，详情请见 [Third Party Licenses](3RD-PARTY-LICENSES.md)。
-
-## 6. 附录
-> 软件供应商在努力尝试让他们的软件更“易于操作”。迄今为止，他们最好的办法就是，翻出所有的老手册，然后在封面盖上“易于操作”这几个字。
->  
-> <div align="right">— 比尔·盖茨</div>
-
-我也是。
