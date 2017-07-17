@@ -26,5 +26,5 @@ include $includes;
 $loader = new Loader;
 $loader->registerClasses(include ROOT_PATH . '/vendor/composer/autoload_classmap.php')
     ->registerNamespaces(include ROOT_PATH . '/vendor/composer/autoload_phalcon_psr4.php')
-    ->register();
+    ->register(true); // Prepend support since Phalcon 3.1
 $di->setShared('loader', $loader);
