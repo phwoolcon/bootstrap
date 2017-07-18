@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )")"
+
+function error {
+    echo $1
+    exit 1
+}
+
+if [ -d ".git" ]; then
+    echo "> git pull"
+    git pull || error "Error $? while updating bootstrap"
+fi
+
+echo "> composer update"
+composer update || error "Error $? while updating composer packages"
+echo "> bin/cli migrate:up"
+bin/cli migrate:up || error "Error while running migrations"
+echo "> bin/dump-autoload"
+bin/dump-autoload || error "Error while dumping autoload"
