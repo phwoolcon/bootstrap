@@ -125,6 +125,7 @@ function cliError($content, $exitCode = 2)
 
 function getGitFile($url, $branch = 'master', $file = 'composer.local.json')
 {
+    cliOutput("Downloading {$url} {$branch} {$file}", 2);
     $rawUrl = $url;
     $mode = 'unknown';
     $branch or $branch = 'master';
@@ -148,6 +149,7 @@ function getGitFile($url, $branch = 'master', $file = 'composer.local.json')
         $mode = 'http';
         $url = $githubHttpsPrefix . $url . "/{$branch}/{$file}";
     }
+    cliOutput("Real download URL: {$url}", 2);
     $unableToDownloadMessage = "Unable to import package from {$rawUrl}";
     switch ($mode) {
         case 'git':
@@ -181,6 +183,7 @@ function getGitFile($url, $branch = 'master', $file = 'composer.local.json')
         default:
             $content = false;
     }
+    cliOutput("Downloaded content: " . $content, 3);
     return $content;
 }
 
@@ -209,6 +212,7 @@ function processPackage($fileContent, $url)
     if (isset($urlToPackages[$url])) {
         $currentPackage = $urlToPackages[$url];
         $filename = sprintf('composer.local-%s.json', str_replace('/', '-', $currentPackage));
+        cliOutput("Saving to file {$filename}", 2);
         file_put_contents(ROOT_PATH . '/' . $filename, $fileContent);
         $importedPackages[$currentPackage] = $importedPackages[$filename] = $importedPackages[$url] = true;
         cliOutput("Created {$filename} for package {$currentPackage}");
