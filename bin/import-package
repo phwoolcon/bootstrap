@@ -1,241 +1,391 @@
 #!/usr/bin/env php
 <?php
 
+namespace Phwoolcon;
+
+use ErrorException;
+use Exception;
 use Phalcon\Text;
 
 error_reporting(-1);
-
-defined('ROOT_PATH') || define('ROOT_PATH', dirname(__DIR__));
-
-$cliOptions = getCliOptions([
-    'required' => [],
-    'optional' => [],
-    'switch' => [
-        'h' => 'help',
-        'q' => 'quiet',
-        'v' => 'verbose',
-    ],
-]);
-
-$quiet = isset($cliOptions['q']) || isset($cliOptions['quiet']);
-$cliOptions['v'] = isset($cliOptions['v']) ? $cliOptions['v'] : [];
-$cliOptions['verbose'] = isset($cliOptions['verbose']) ? $cliOptions['verbose'] : [];
-$verbose = count((array)$cliOptions['v']) + count((array)$cliOptions['verbose']);
-
-if (isset($cliOptions['h']) || isset($cliOptions['help'])) {
-    cliOutput([
-        'Import phwoolcon package(s) to your project.',
-        'This will download composer.local.json file(s) from given git repository',
-        '',
-        sprintf('Usage: %s [-h|--help] [-q|--quiet] [-v] [<repo> [<branch>]]', $argv[0]),
-        '  Options:',
-        '    -h,    --help          Show this help message and exit',
-        '    -q,    --quiet         Do not output messages',
-        '    -v,    --verbose       Show more output messages',
-        '',
-        '  Arguments:',
-        "    <repo>                 The package's git repository. for example:",
-        '                               git@github.com:phwoolcon/demo.git           (Github repository)',
-        '                               phwoolcon/demo                              (Identical to Github)',
-        '                               git@example.com:your-group/your-project.git (Self hosted repository)',
-        "                           Or a http URL to composer.local.json, for example:",
-        '                               http://example.com/composer.local.json',
-        '                               https://raw.githubusercontent.com/phwoolcon/demo/master/composer.local.json',
-        '',
-        '    <branch>               Only use this argument for git repository, default "master"',
-    ]);
-    exit(0);
-}
-
-$arguments = array_filter($argv, function ($v) {
-    return $v{0} != '-';
-});
-array_shift($arguments);
 
 set_error_handler(function ($severity, $message, $file, $line) {
     throw new ErrorException($message, $severity, $severity, $file, $line);
 });
 
-if ($arguments) {
-    switch (count($arguments)) {
-        case 1:
-            list($url) = $arguments;
-            $branch = null;
-            break;
-        default:
-            list($url, $branch) = $arguments;
-            break;
-    }
-    importRepository($url, $branch);
-}
+ImportPackage::instance($argv, dirname(__DIR__))->run();
 
-foreach (glob(ROOT_PATH . '/composer.local*.json') as $localPackage) {
-    $fileContent = file_get_contents($localPackage);
-    processPackage($fileContent, basename($localPackage));
-}
-
-function getCliOptions($definitions)
+class ImportPackage
 {
-    $shortOptions = [];
-    $longOptions = [];
-    $suffixes = [
-        'required' => ':',
-        'optional' => '::',
-        'switch' => '',
-    ];
-    foreach ($definitions as $type => $definition) {
-        if (isset($suffixes[$type])) {
-            foreach ($definition as $short => $long) {
-                $suffix = $suffixes[$type];
-                is_numeric($short) or $shortOptions[] = $short . $suffix;
-                $longOptions[] = $long . $suffix;
+    protected $arguments;
+    protected $argv;
+    protected $downloadCache = [];
+    protected $httpStreamContext;
+    protected $importedPackages = [];
+    protected $options;
+    protected $quiet;
+    protected $rootPath;
+    protected $urlToPackages = [];
+    protected $verbosity;
+
+    public function __construct($argv, $rootPath)
+    {
+        $this->rootPath = $rootPath;
+        $this->argv = $argv;
+        $this->options = $this->getCliOptions([
+            'required' => [],
+            'optional' => [],
+            'switch' => ['h' => 'help', 'q' => 'quiet', 'v' => 'verbose',],
+        ]);
+
+        $this->quiet = isset($this->options['q']) || isset($this->options['quiet']);
+        $this->options['v'] = isset($this->options['v']) ? $this->options['v'] : [];
+        $this->options['verbose'] = isset($this->options['verbose']) ? $this->options['verbose'] : [];
+        $this->verbosity = count((array)$this->options['v']) + count((array)$this->options['verbose']);
+
+        $arguments = array_filter($argv, function ($v) {
+            return $v{0} != '-';
+        });
+        array_shift($arguments);
+        $this->arguments = $arguments;
+
+        $this->httpStreamContext = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'timeout' => 10,
+                'header' => [
+                    'Connection: close',
+                    'User-agent: Phwoolcon package importer',
+                ],
+            ],
+        ]);
+    }
+
+    public static function instance($argv, $rootPath)
+    {
+        return new static($argv, $rootPath);
+    }
+
+    public function run()
+    {
+        if (isset($this->options['h']) || isset($this->options['help'])) {
+            $this->printUsage();
+            exit(0);
+        }
+
+        if ($arguments = $this->arguments) {
+            // Import new package, phwoolcon or composer
+            switch (count($arguments)) {
+                case 1:
+                    list($url) = $arguments;
+                    $branch = null;
+                    break;
+                default:
+                    list($url, $branch) = $arguments;
+                    break;
+            }
+            $this->importNewRepository($url, $branch);
+        } else {
+            // Update phwoolcon packages only
+            foreach (glob($this->rootPath . '/composer.local*.json') as $localFile) {
+                $localPackage = json_decode(file_get_contents($localFile), true);
+                if (empty($localPackage['phwoolcon-packages']) || !is_array($localPackage['phwoolcon-packages'])) {
+                    continue;
+                }
+                foreach ($localPackage['phwoolcon-packages'] as $package) {
+                    if (empty($package['name']) || !empty($package['no-update'])) {
+                        continue;
+                    }
+                    $name = $package['name'];
+                    $url = isset($package['url']) ? $package['url'] : $name;
+                    $branch = isset($package['branch']) ? $package['branch'] : null;
+                    if (isset($this->importedPackages[$name])) {
+                        continue;
+                    }
+                    $this->importRepository($url, $branch);
+                }
             }
         }
     }
-    return getopt(implode('', $shortOptions), $longOptions);
-}
 
-function cliOutput($content, $verboseLevel = 0)
-{
-    global $quiet, $verbose;
-    if ($quiet || $verboseLevel > $verbose) {
-        return;
-    }
-    if (is_array($content)) {
-        foreach ($content as $line) {
-            echo $line, PHP_EOL;
+    protected function getCliOptions($definitions)
+    {
+        $shortOptions = [];
+        $longOptions = [];
+        $suffixes = [
+            'required' => ':',
+            'optional' => '::',
+            'switch' => '',
+        ];
+        foreach ($definitions as $type => $definition) {
+            if (isset($suffixes[$type])) {
+                foreach ($definition as $short => $long) {
+                    $suffix = $suffixes[$type];
+                    is_numeric($short) or $shortOptions[] = $short . $suffix;
+                    $longOptions[] = $long . $suffix;
+                }
+            }
         }
-        return;
+        return getopt(implode('', $shortOptions), $longOptions);
     }
-    echo $content, PHP_EOL;
-}
 
-function cliError($content, $exitCode = 2)
-{
-    $out = $exitCode ? STDERR : STDOUT;
-    if (is_array($content)) {
-        foreach ($content as $line) {
-            fwrite($out, $line . PHP_EOL);
+    protected function cliOutput($content, $verboseLevel = 0)
+    {
+        if ($this->quiet || $verboseLevel > $this->verbosity) {
+            return;
         }
-        exit($exitCode);
+        if (is_array($content)) {
+            foreach ($content as $line) {
+                echo $line, PHP_EOL;
+            }
+            return;
+        }
+        echo $content, PHP_EOL;
     }
-    fwrite($out, $content . PHP_EOL);
-    exit($exitCode);
-}
 
-function getGitFile($url, $branch = 'master', $file = 'composer.local.json')
-{
-    cliOutput("Downloading {$url} {$branch} {$file}", 2);
-    $rawUrl = $url;
-    $mode = 'unknown';
-    $branch or $branch = 'master';
-    /**
-     * The `git archive` command doesn't work for github.com, convert to https url, e.g.:
-     * git@github.com:phwoolcon/demo.git master
-     * will be converted to:
-     * https://raw.githubusercontent.com/phwoolcon/demo/master/composer.local.json
-     */
-    $githubPrefix = 'git@github.com:';
-    $githubHttpsPrefix = 'https://raw.githubusercontent.com/';
-    $githubPrefixLength = strlen($githubPrefix);
-    if (Text::startsWith($url, $githubPrefix)) {
-        $mode = 'http';
-        $url = $githubHttpsPrefix . substr($url, $githubPrefixLength, -4) . "/{$branch}/{$file}";
-    } elseif (Text::startsWith($url, 'git@')) {
-        $mode = 'git';
-    } elseif (Text::startsWith($url, 'http://') || Text::startsWith($url, 'https://')) {
-        $mode = 'http';
-    } elseif (preg_match('|^[^/^:]+/[^/^:^.]+$|', $url)) {
-        $mode = 'http';
-        $url = $githubHttpsPrefix . $url . "/{$branch}/{$file}";
+    protected function cliError($content, $exit = true)
+    {
+        if (is_array($content)) {
+            foreach ($content as $line) {
+                fwrite(STDERR, $line . PHP_EOL);
+            }
+            if ($exit) {
+                exit(2);
+            }
+            return;
+        }
+        fwrite(STDERR, $content . PHP_EOL);
+        if ($exit) {
+            exit(2);
+        }
     }
-    cliOutput("Real download URL: {$url}", 2);
-    $unableToDownloadMessage = "Unable to import package from {$rawUrl}";
-    switch ($mode) {
-        case 'git':
-            $sshUrl = str_replace(':', '/', $url);
-            $command = "git archive --format=tgz --remote=ssh://{$sshUrl} {$branch} {$file} | tar xzO";
-            ob_start();
-            system($command, $returnValue);
-            $content = ob_get_clean();
-            if ($returnValue) {
-                cliError($unableToDownloadMessage);
-            }
-            break;
-        case 'http':
-            try {
-                $content = file_get_contents($url, null, stream_context_create([
-                    'http' => [
-                        'timeout' => 10,
-                    ],
-                ]));
-            } catch (Exception $e) {
-                $content = false;
-                cliError([
-                    str_replace("file_get_contents($url): ", '', $e->getMessage()),
-                    $unableToDownloadMessage,
-                ]);
-            }
-            if ($content === false) {
-                cliError($unableToDownloadMessage);
-            }
-            break;
-        default:
-            $content = false;
-    }
-    cliOutput("Downloaded content: " . $content, 3);
-    return $content;
-}
 
-function processPackage($fileContent, $url)
-{
-    static $urlToPackages = [], $importedPackages = [];
-    if (isset($importedPackages[$url])) {
+    protected function getGitFile($url, $branch, $file)
+    {
+        $this->cliOutput("Downloading {$url} {$branch} {$file} ...", 2);
+        $rawUrl = $url;
+        $mode = 'unknown';
+        $branch or $branch = 'master';
+        $cacheKey1 = $rawUrl . $branch . $file;
+        if (isset($this->downloadCache[$cacheKey1])) {
+            $this->cliOutput("Using content in download cache", 1);
+            return $this->downloadCache[$cacheKey1];
+        }
+        /**
+         * The `git archive` command doesn't work for github.com, convert to https url, e.g.:
+         * git@github.com:phwoolcon/demo.git master
+         * will be converted to:
+         * https://raw.githubusercontent.com/phwoolcon/demo/master/composer.local.json
+         */
+        $githubPrefix = 'git@github.com:';
+        $githubHttpsPrefix = 'https://raw.githubusercontent.com/';
+        $githubPrefixLength = strlen($githubPrefix);
+        if (Text::startsWith($url, $githubPrefix)) {
+            $mode = 'http';
+            $url = $githubHttpsPrefix . substr($url, $githubPrefixLength, -4) . "/{$branch}/{$file}";
+        } elseif (Text::startsWith($url, 'git@')) {
+            $mode = 'git';
+        } elseif (Text::startsWith($url, 'http://') || Text::startsWith($url, 'https://')) {
+            $mode = 'http';
+        } elseif (preg_match('|^[^/^:]+/[^/^:^.]+$|', $url)) {
+            $mode = 'http';
+            $url = $githubHttpsPrefix . $url . "/{$branch}/{$file}";
+        }
+        $this->cliOutput("Real download URL: {$url}", 2);
+        $unableToDownloadMessage = "Unable to import package from {$rawUrl}";
+        $this->downloadCache[$cacheKey1] = $this->downloadCache[$cacheKey2 = $url . $branch . $file] = false;
+        switch ($mode) {
+            case 'git':
+                $sshUrl = str_replace(':', '/', $url);
+                $command = "git archive --format=tgz --remote=ssh://{$sshUrl} {$branch} {$file} | tar xzO";
+                ob_start();
+                system($command, $returnValue);
+                $content = ob_get_clean();
+                if ($returnValue) {
+                    $this->cliError($unableToDownloadMessage, false);
+                    return false;
+                }
+                break;
+            case 'http':
+                try {
+                    $content = file_get_contents($url, null, $this->httpStreamContext);
+                } catch (Exception $e) {
+                    $this->cliError([
+                        str_replace("file_get_contents($url): ", '', $e->getMessage()),
+                        $unableToDownloadMessage,
+                    ], false);
+                    return false;
+                }
+                if ($content === false) {
+                    $this->cliError($unableToDownloadMessage, false);
+                    return false;
+                }
+                break;
+            default:
+                return false;
+        }
+        $this->cliOutput("Downloaded content: " . $content, 3);
+        $this->downloadCache[$cacheKey1] = $this->downloadCache[$cacheKey2] = $content;
+        return $content;
+    }
+
+    protected function processPackage($fileContent, $url)
+    {
+        if (isset($this->importedPackages[$url])) {
+            return true;
+        }
+        $this->cliOutput("Processing packages from {$url} ...", 1);
+        $json = json_decode($fileContent, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->cliError("Unable to read composer.local.json for {$url}");
+        }
+        if (isset($json['phwoolcon-packages']) && is_array($json['phwoolcon-packages'])) {
+            foreach ($json['phwoolcon-packages'] as $package) {
+                if (!isset($package['name']) || !isset($package['url'])) {
+                    continue;
+                }
+                $this->cliOutput("Detected package {$package['name']}", 1);
+                $packageFilename = sprintf('composer.local-%s.json', str_replace('/', '-', $package['name']));
+                $this->urlToPackages[$package['url']] = $this->urlToPackages[$packageFilename] = $package['name'];
+            }
+        }
+
+        if (isset($this->urlToPackages[$url])) {
+            $currentPackage = $this->urlToPackages[$url];
+            $filename = sprintf('composer.local-%s.json', str_replace('/', '-', $currentPackage));
+            $this->cliOutput("Saving to file {$filename} ...", 2);
+            file_put_contents($this->rootPath . '/' . $filename, $fileContent);
+            $this->importedPackages[$currentPackage] =
+            $this->importedPackages[$filename] = $this->importedPackages[$url] = true;
+            $this->cliOutput("Created {$filename} for package {$currentPackage}");
+        }
+
+        if (isset($json['phwoolcon-packages']) && is_array($json['phwoolcon-packages'])) {
+            foreach ($json['phwoolcon-packages'] as $package) {
+                if (!isset($package['name']) || !isset($package['url'])) {
+                    continue;
+                }
+                if (isset($this->importedPackages[$package['name']]) ||
+                    isset($this->importedPackages[$package['url']])) {
+                    continue;
+                }
+                $branch = isset($package['branch']) ? $package['branch'] : null;
+                $this->importRepository($package['url'], $branch);
+            }
+        }
         return true;
     }
-    cliOutput("Processing packages from {$url}", 1);
-    $json = json_decode($fileContent, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        cliError("Unable to read package definition for {$url}");
+
+    protected function importRepository($url, $branch)
+    {
+        $this->cliOutput("Loading {$url} ...", 1);
+        $composerLocalJson = $this->getGitFile($url, $branch, 'composer.local.json');
+        return $this->processPackage($composerLocalJson, $url);
     }
-    if (isset($json['phwoolcon-packages']) && is_array($json['phwoolcon-packages'])) {
-        foreach ($json['phwoolcon-packages'] as $package) {
-            if (!isset($package['name']) || !isset($package['url'])) {
-                continue;
+
+    protected function importNewRepository($url, $branch)
+    {
+        $this->cliOutput("Importing new package from {$url} ...", 1);
+        // 1. Try composer.local.json
+        if (!$composerLocalJson = $this->getGitFile($url, $branch, 'composer.local.json')) {
+            $this->cliOutput("Unable to fetch composer.local.json, trying composer.json ...", 1);
+            // 2. composer.local.json not found, try to create one
+            // 3. Try to parse composer.json
+            if (!$composerJson = $this->getGitFile($url, $branch, 'composer.json')) {
+                $this->cliError("Unable to read composer.json for {$url}");
             }
-            cliOutput("Detected package {$package['name']}", 1);
-            $packageFilename = sprintf('composer.local-%s.json', str_replace('/', '-', $package['name']));
-            $urlToPackages[$package['url']] = $urlToPackages[$packageFilename] = $package['name'];
+            $this->cliOutput("Parsing composer.json ...", 1);
+            $composer = json_decode($composerJson, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $this->cliError("Unable to parse composer.json for {$url}");
+            }
+            if (empty($composer['name'])) {
+                $this->cliError("Unable to read composer.json for {$url}");
+            }
+            $this->cliOutput("Creating composer.local.json for {$url} ...", 1);
+            $composerLocalJson = $this->createComposerLocalJson($composer['name'], $url, $branch);
+            $this->cliOutput("Created content: {$composerLocalJson}", 3);
         }
+        return $this->processPackage($composerLocalJson, $url);
     }
 
-    if (isset($urlToPackages[$url])) {
-        $currentPackage = $urlToPackages[$url];
-        $filename = sprintf('composer.local-%s.json', str_replace('/', '-', $currentPackage));
-        cliOutput("Saving to file {$filename}", 2);
-        file_put_contents(ROOT_PATH . '/' . $filename, $fileContent);
-        $importedPackages[$currentPackage] = $importedPackages[$filename] = $importedPackages[$url] = true;
-        cliOutput("Created {$filename} for package {$currentPackage}");
-    }
-
-    if (isset($json['phwoolcon-packages']) && is_array($json['phwoolcon-packages'])) {
-        foreach ($json['phwoolcon-packages'] as $package) {
-            if (!isset($package['name']) || !isset($package['url'])) {
-                continue;
-            }
-            if (isset($importedPackages[$package['name']]) || isset($importedPackages[$package['url']])) {
-                continue;
-            }
-            $branch = isset($package['branch']) ? $package['branch'] : null;
-            importRepository($package['url'], $branch);
+    protected function createComposerLocalJson($name, $repo, $branch)
+    {
+        $branch or $branch = 'master';
+        // Find package on packagist.org
+        $packagistUrl = "https://packagist.org/p/{$name}.json";
+        try {
+            $this->cliOutput("Asking packagist: {$packagistUrl} ...", 1);
+            $packagistJson = file_get_contents($packagistUrl, null, $this->httpStreamContext);
+            $this->cliOutput($packagistJson, 3);
+        } catch (Exception $e) {
+            $this->cliError(str_replace("file_get_contents($packagistUrl): ", '', $e->getMessage()), false);
+            $packagistJson = false;
         }
+        // Treat partial repo as github repo, e.g. phwoolcon/demo => git@github.com:phwoolcon/demo.git
+        $repoPrefixes = [substr($repo, 0, 4), substr($repo, 0, 7)];
+        if ($repoPrefixes[0] != 'git@' && $repoPrefixes[1] != 'http://' && $repoPrefixes[1] != 'https:/') {
+            $repo = "git@github.com:{$repo}.git";
+        }
+        // If the package is found on packagist.org, just require it
+        $composerLocal = [
+            'require' => [
+                $name => 'dev-' . $branch,
+            ],
+            'phwoolcon-packages' => [
+                [
+                    'name' => $name,
+                    'url' => $repo,
+                    'branch' => $branch,
+                    'no-update' => true,
+                ],
+            ],
+        ];
+        $packagist = json_decode($packagistJson, true);
+        // Add repository section if not found on packagist.org
+        if (empty($packagist['packages'][$name])) {
+            $this->cliOutput("Not found on packagist.org", 1);
+            $composerLocal = array_merge($composerLocal, [
+                'repositories' => [
+                    [
+                        'type' => 'git',
+                        'url' => $repo,
+                    ],
+                ],
+            ]);
+        } else {
+            $this->cliOutput("Found on packagist.org", 1);
+        }
+        $content =
+            json_encode($composerLocal, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n";
+        $this->downloadCache[$name . $branch . 'composer.local.json'] = $content;
+        $this->downloadCache[$repo . $branch . 'composer.local.json'] = $content;
+        return $content;
     }
-    return true;
-}
 
-function importRepository($url, $branch)
-{
-    cliOutput("Loading {$url}", 1);
-    $fileContent = getGitFile($url, $branch);
-    return processPackage($fileContent, $url);
+    protected function printUsage()
+    {
+        $this->cliOutput([
+            'Import a phwoolcon or composer package to your project.',
+            'This will download composer.local.json from given git repository if available,',
+            'otherwise, a simple composer.local.json will be created for the repository.',
+            '',
+            sprintf('Usage: %s [-h|--help] [-q|--quiet] [-v] [<repo> [<branch>]]', $this->argv[0]),
+            '  Options:',
+            '    -h,    --help          Show this help message and exit',
+            '    -q,    --quiet         Do not output messages',
+            '    -v,    --verbose       Show more output messages',
+            '',
+            '  Arguments:',
+            "    <repo>                 The package's git repository. for example:",
+            '                               git@github.com:phwoolcon/demo.git           (GitHub repository)',
+            '                               phwoolcon/demo                              (Treated as GitHub)',
+            '                               git@example.com:your-group/your-project.git (Self hosted repository)',
+            "                           Or a http URL to composer.local.json, for example:",
+            '                               http://example.com/composer.local.json',
+            '                               https://raw.githubusercontent.com/phwoolcon/demo/master/composer.local.json',
+            '',
+            '    <branch>               Only use this argument for git repository, default "master"',
+        ]);
+    }
 }
