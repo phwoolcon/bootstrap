@@ -8,23 +8,22 @@ Phalcon + Swoole
 
 The Bootstrap provides directory structure for running Phwoolcon.
 
-The purpose of this project is to create a high performance  
-web application, which can run in traditional php-fpm mode and  
-service mode.
+The purpose of this project is to create a high performance web application,  
+which can run in traditional php-fpm mode and service mode.
 
 In service mode, you gain extreme speed for your application,  
 by reducing lot of unnecessary and repetitive computing.
 
-If you have bugs in service mode, you can easily turn off the service  
-mode, you loose some speed (but still fast) to gain more stability,  
-fix your bugs and apply service mode again.
+If you have bugs in service mode, you can easily turn off the service mode,  
+you lose some speed (but still fast) to gain more stability, 
+fix bugs and apply service mode again.
 
 # 1. System Requirements
 * Linux or MacOS (Windows is neither recommended nor tested,  
 but you can install Linux on Windows by VirtualBox or other virtual machines)
 * Nginx (Latest version recommended)
 * PHP version >= 5.5 (7.1 is recommended, year 2017)
-* PHP components: fpm, gd, cli, curl, dev, json, mbstring, mcrypt, pdo-mysql, redis, xml, zip
+* PHP components: fpm, gd, cli, curl, dev, json, mbstring, pdo-mysql, redis, xml, zip
 * MySQL server (or MariaDB / Percona / TiDB)
 * Phalcon (Latest version recommended)
 * Swoole (Latest version recommended)
@@ -38,31 +37,25 @@ cd my-project-name
 ```
 
 <a name="s2.2"></a>
-## 2.2. Configure Composer
-Please **DO NOT** edit `composer.json` directly, that will break bootstrap update.
+## 2.2. Import Packages
+Please **DO NOT** edit `composer.json` directly, that will break framework update.
 
-use `composer.local.json` instead:
+Use `bin/import-package` to create `composer.local-*.json` instead,  
+`composer.local-*.json` is isolated from the framework itself.
+
+For example:
+
+* To import a public composer package:
 ```bash
-vim composer.local.json
+bin/import-package some/public-package
 ```
 
-Manage your project repositories here, for example:
-```json
-{
-    "require": {
-        "my/project": "~1.0"
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git@git.example.com:my/project.git",
-            "vendor-alias": "my-org"
-        }
-    ]
-}
+* To import a private composer package:
+```bash
+bin/import-package git@git.example.com:my/private-project.git
 ```
 
-Please see [Composer Merge Plugin (by Wikimedia)](https://github.com/wikimedia/composer-merge-plugin/blob/master/README.md#plugin-configuration) for detailed reference.
+Please see [Composer Merge Plugin (by Wikimedia)](https://github.com/wikimedia/composer-merge-plugin/blob/master/README.md#plugin-configuration) to learn more about `composer.local-*.json`.
 
 Demo: [Phwoolcon Demo](https://github.com/phwoolcon/demo#7-install-phwoolcondemo).
 
@@ -137,13 +130,10 @@ Now you have a private composer repository, your first `Phwoolcon package`.
 
 If you want to share it to others, you can publish it on [Github](https://github.com) and [Packagist](https://packagist.org).
 
-### 2.3.2. Fetch Upstream Codes
-Return to your working directory (i.e. the Phwoolcon Bootstrap directory),  
-and then pull upstream codes:
+### 2.3.2. Update Codes
+Return to your working directory (i.e. the Phwoolcon Bootstrap directory), then:
 ```bash
-cd ../../..
-git pull # Update bootstrap to ensure latest version is used
-composer update # Update the project
+bin/update
 ```
 
 ## 2.4. Phwoolcon Configuration
@@ -218,6 +208,8 @@ ready to be pushed to the production environment.
 Push them to your project repository, in branch `release`.
 
 ### 2.6.2. Deploy
+#### 2.6.2.1. Manual Deployment
+
 Let's take `rsync` as an example:
 ```bash
 rsync -auv --delete --chown=www-data:www-data --rsync-path='sudo rsync' \
@@ -226,6 +218,9 @@ rsync -auv --delete --chown=www-data:www-data --rsync-path='sudo rsync' \
 ssh www-data@production-host \
     '/path/to/production/directory/bin/dump-autoload'
 ```
+
+#### 2.6.2.2. Auto Deployment
+Please see [Deploy Automator](https://github.com/phwoolcon/deploy-automator)
 
 ## 2.7. Service Mode
 

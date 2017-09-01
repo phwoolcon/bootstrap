@@ -13,15 +13,15 @@ Bootstrap 用于提供 Phwoolcon 运行时的目录结构。
 
 在服务模式中，你的应用程序可以减少许多非必要的重复计算，获得极致的性能。
 
-如果在服务模式中出现了 Bug，你可以轻松地关闭服务模式，损失一些性能（但是
-仍然很快）换取稳定性，待 Bug 修复后再启用服务模式。
+如果在服务模式中出现了 Bug，你可以轻松地关闭服务模式，损失一些性能
+（但是仍然很快）换取稳定性，待 Bug 修复后再启用服务模式。
 
 # 1. 系统要求
 * Linux 或者 MacOS（不推荐 Windows，也没测试过。
 不过你可以在 Windows 上用 VirtualBox 之类的虚拟机安装 Linux）
 * Nginx（推荐最新版本）
 * PHP version >= 5.5（推荐 7.1，2017 年注）
-* PHP 组件: fpm, gd, cli, curl, dev, json, mbstring, mcrypt, pdo-mysql, redis, xml, zip
+* PHP 组件: fpm, gd, cli, curl, dev, json, mbstring, pdo-mysql, redis, xml, zip
 * MySQL server (或者 MariaDB / Percona / TiDB)
 * Phalcon（推荐最新版本）
 * Swoole（推荐最新版本）
@@ -36,30 +36,24 @@ cd my-project-name
 
 <a name="s2.2"></a>
 ## 2.2. 配置 Composer
-请 **不要** 直接编辑 `composer.json`，这样会使你无法获取 bootstrap 的更新。
+请 **不要** 直接编辑 `composer.json`，这样会使你无法获取架的更新。
 
-请编辑 `composer.local.json`：
+请使用 `bin/import-package` 创建 `composer.local-*.json` 来导入依赖。
+`composer.local-*.json` 与框架是隔离的。
+
+例如：
+
+* 导入一个公开的 composer 包：
 ```bash
-vim composer.local.json
+bin/import-package some/public-package
 ```
 
-在这里管理你的项目仓库，例如：
-```json
-{
-    "require": {
-        "my/project": "~1.0"
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git@git.example.com:my/project.git",
-            "vendor-alias": "my-org"
-        }
-    ]
-}
+* 导入一个私有的 composer 包：
+```bash
+bin/import-package git@git.example.com:my/private-project.git
 ```
 
-更多详情请查看 [Composer Merge Plugin (by Wikimedia)](https://github.com/wikimedia/composer-merge-plugin/blob/master/README.md#plugin-configuration)。
+关于 `composer.local-*.json` 的更多详情请查看 [Composer Merge Plugin (by Wikimedia)](https://github.com/wikimedia/composer-merge-plugin/blob/master/README.md#plugin-configuration)。
 
 Demo: [Phwoolcon Demo](https://github.com/phwoolcon/demo#7-install-phwoolcondemo).
 
@@ -134,13 +128,11 @@ git push
 
 如果你乐于分享，你可以把它发布到 [Github](https://github.com) 和 [Packagist](https://packagist.org) 上。
 
-### 2.3.2. 获取最新代码
+### 2.3.2. 更新代码
 回到你的工作目录（也就是 Phwoolcon Bootstrap 所在的目录），
-然后拉取代码：
+然后：
 ```bash
-cd ../../..
-git pull # 确保 bootstrap 是最新的
-composer update # 更新项目
+bin/update
 ```
 
 ## 2.4. Phwoolcon 配置文件
@@ -215,6 +207,8 @@ build 脚本会在工作目录下创建一个 `ignore/release` 目录，
 把这个目录加入你的项目仓库，放到 `release` 分支下。
 
 ### 2.6.2. 部署
+#### 2.6.2.1. 手动部署
+
 让我们用 `rsync` 作例子：
 ```bash
 rsync -auv --delete --chown=www-data:www-data --rsync-path='sudo rsync' \
@@ -223,6 +217,9 @@ rsync -auv --delete --chown=www-data:www-data --rsync-path='sudo rsync' \
 ssh www-data@production-host \
     '/path/to/production/directory/bin/dump-autoload'
 ```
+
+#### 2.6.2.2. 自动部署
+请见 [Deploy Automator](https://github.com/phwoolcon/deploy-automator)
 
 ## 2.7. 服务模式
 
