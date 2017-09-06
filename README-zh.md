@@ -35,7 +35,7 @@ cd my-project-name
 ```
 
 <a name="s2.2"></a>
-## 2.2. 配置 Composer
+## 2.2. 导入 Composer 包
 请 **不要** 直接编辑 `composer.json`，这样会使你无法获取架的更新。
 
 请使用 `bin/import-package` 创建 `composer.local-*.json` 来导入依赖。
@@ -62,78 +62,79 @@ Demo: [Phwoolcon Demo](https://github.com/phwoolcon/demo#7-install-phwoolcondemo
 
 **绝对不要** 把你的代码放进 `app/` 目录里面，这样非常难以实施模块化。
 
-### 2.3.1 创建项目的 Composer Package
-如果你是第一次使用 Phwoolcon，在 `vender` 目录里面，
-给你的项目创建一个新的代码仓库：
+<a name="s2.3.1"></a>
+### 2.3.1 创建一个 Phwoolcon 包
+运行：
 ```bash
-mkdir -p vendor/my/project
-cd vendor/my/project
-git init
-echo "# My First Phwoolcon Project" > README.md
-cat > composer.json << 'EOL'
-{
-    "name": "my/project",
-    "description": "My First Phwoolcon Project",
-    "type": "library",
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "My Name",
-            "email": "my-email@example.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "phwoolcon/phwoolcon": "~1.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "My\\Project\\": "src",
-            "My\\Project\\Tests\\": "tests"
-        },
-        "exclude-from-classmap": [
-            "/tests/"
-        ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    }
-}
-EOL
-mkdir phwoolcon-package
-cat > phwoolcon-package/phwoolcon-package-my-project.php << 'EOL'
-<?php
-return [
-    'my/project' => [
-        'di' => [
-            10 => 'di.php',
-        ],
-    ],
-];
-EOL
-touch phwoolcon-package/di.php
-touch phwoolcon-package/routes.php
-mkdir -p phwoolcon-package/config
-mkdir -p phwoolcon-package/views
-mkdir -p phwoolcon-package/assets
-git add ./
+bin/cli package:create
+```
+这个工具会问你填一些基本信息，像这样：
+
+```text
+----------------------------------------------------------------------
+Please, provide the following information:
+----------------------------------------------------------------------
+Your name: Christopher CHEN
+Your Github username (<username> in https://github.com/username): Fishdrowned
+Your email address: fishdrowned@gmail.com
+Your website [https://github.com/Fishdrowned]:
+Package vendor (<vendor> in https://github.com/vendor/package) [Fishdrowned]: phwoolcon
+Package name (<package> in https://github.com/vendor/package): theme-mdl
+Package very short description: The Material Design Lite Theme for Phwoolcon
+PSR-4 namespace (usually, Vendor\Package) [Phwoolcon\ThemeMdl]: 
+
+----------------------------------------------------------------------
+Please, check that everything is correct:
+----------------------------------------------------------------------
+Your name: Christopher CHEN
+Your Github username: Fishdrowned
+Your email address: fishdrowned@gmail.com
+Your website: https://github.com/phwoolcon
+Package vendor: phwoolcon
+Package name: theme-mdl
+Package very short description: The Material Design Lite
+PSR-4 namespace: Phwoolcon\ThemeMdl
+
+Modify files with these values? [y/N/q] y
+
+Done.
+Now you should remove the file 'prefill.php'.
+
+----------------------------------------------------------------------
+Please, provide the following information:
+----------------------------------------------------------------------
+Git repository (The git repository of the package) [git@github.com:phwoolcon/theme-mdl.git]: 
+Choose license (1 - APACHE 2.0, 2 - MIT, 3 - Proprietary) [1]: 
+```
+
+然后你在 `vendor` 目录下可以找到一个新包，并且已经添加了  
+git 远程仓库，就等你 commit 和 push 了。
+
+```bash
 git commit -m "Initial commit"
-git remote add origin git@git.example.com:my/project.git
 git push
 ```
 
 现在你拥有了一个私有的 composer 仓库，你的第一个 `Phwoolcon 包`。
 
-如果你乐于分享，你可以把它发布到 [Github](https://github.com) 和 [Packagist](https://packagist.org) 上。
+如果你乐于分享，你可以把它发布到 [GitHub](https://github.com) 和 [Packagist](https://packagist.org) 上。
 
-### 2.3.2. 更新代码
-回到你的工作目录（也就是 Phwoolcon Bootstrap 所在的目录），
-然后：
+### 2.3.2. 导入你的项目
+现在你可以把刚才创建的 Phwoolcon 包导入进来了。
+
+参阅 [2.2. 导入 Composer 包](#s2.2)
+
+### 2.3.3. 更新代码
 ```bash
 bin/update
 ```
+这个脚本会做以下工作：
+
+* `git pull` 更新框架 (`phwoolcon/bootstrap`) 本身；
+* `composer update` 更新所有 composer 包，包括你的项目；
+* `bin/cli migrate:up` 运行数据库更新脚本；
+* `bin/dump-autoload` 更新 composer autoload，应用最新的  
+assets，配置文件，翻译文件，生成 model trait 和 IDE helper。
 
 ## 2.4. Phwoolcon 配置文件
 项目配置文件是用 symlink 从各个 `Phwoolcon 包` 里面连接 `app/config` 目录里的。
@@ -183,8 +184,8 @@ Phwoolcon 这样解决：
 * 接下来把你各个项目里面的公用组件也都做成 `Phwoolcon 包`；
 * 然后把它们加到项目包的 `composer.json` 里面。
 
-**重要** 所有私有仓库都 **必须** 在 `composer.local.json` 文件（步骤[2.2.](#s2.2)创建的）的
-`repositories` 章节声明，否则 `composer` 找不到它们。
+**重要** 所有私有仓库都 **必须** 在 `composer.local.json` 文件（参见步骤 [2.3.1 创建一个 Phwoolcon 包](#s2.3.1)）的
+`repositories` 中声明，否则 `composer` 找不到它们。
 
 ## 2.6. 构建 / 部署
 部署 composer 项目是一件痛苦的事情，因为：

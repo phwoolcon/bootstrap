@@ -64,77 +64,79 @@ All project codes will be organized as composer packages.
 
 **NEVER** put your codes into the `app/` directory, that make it complicated to implement modularization.
 
-### 2.3.1 Create Project Composer Package
-If you are the first time to use Phwoolcon, create a new repository  
-in the `vendor` directory, for your project codes:
+<a name="s2.3.1"></a>
+### 2.3.1 Create a Phwoolcon Package
+Run:
 ```bash
-mkdir -p vendor/my/project
-cd vendor/my/project
-git init
-echo "# My First Phwoolcon Project" > README.md
-cat > composer.json << 'EOL'
-{
-    "name": "my/project",
-    "description": "My First Phwoolcon Project",
-    "type": "library",
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "My Name",
-            "email": "my-email@example.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "phwoolcon/phwoolcon": "~1.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "My\\Project\\": "src",
-            "My\\Project\\Tests\\": "tests"
-        },
-        "exclude-from-classmap": [
-            "/tests/"
-        ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    }
-}
-EOL
-mkdir phwoolcon-package
-cat > phwoolcon-package/phwoolcon-package-my-project.php << 'EOL'
-<?php
-return [
-    'my/project' => [
-        'di' => [
-            10 => 'di.php',
-        ],
-    ],
-];
-EOL
-touch phwoolcon-package/di.php
-touch phwoolcon-package/routes.php
-mkdir -p phwoolcon-package/config
-mkdir -p phwoolcon-package/views
-mkdir -p phwoolcon-package/assets
-git add ./
+bin/cli package:create
+```
+This tool will ask you to input some basic information, for example:
+
+```text
+----------------------------------------------------------------------
+Please, provide the following information:
+----------------------------------------------------------------------
+Your name: Christopher CHEN
+Your Github username (<username> in https://github.com/username): Fishdrowned
+Your email address: fishdrowned@gmail.com
+Your website [https://github.com/Fishdrowned]:
+Package vendor (<vendor> in https://github.com/vendor/package) [Fishdrowned]: phwoolcon
+Package name (<package> in https://github.com/vendor/package): theme-mdl
+Package very short description: The Material Design Lite Theme for Phwoolcon
+PSR-4 namespace (usually, Vendor\Package) [Phwoolcon\ThemeMdl]: 
+
+----------------------------------------------------------------------
+Please, check that everything is correct:
+----------------------------------------------------------------------
+Your name: Christopher CHEN
+Your Github username: Fishdrowned
+Your email address: fishdrowned@gmail.com
+Your website: https://github.com/phwoolcon
+Package vendor: phwoolcon
+Package name: theme-mdl
+Package very short description: The Material Design Lite
+PSR-4 namespace: Phwoolcon\ThemeMdl
+
+Modify files with these values? [y/N/q] y
+
+Done.
+Now you should remove the file 'prefill.php'.
+
+----------------------------------------------------------------------
+Please, provide the following information:
+----------------------------------------------------------------------
+Git repository (The git repository of the package) [git@github.com:phwoolcon/theme-mdl.git]: 
+Choose license (1 - APACHE 2.0, 2 - MIT, 3 - Proprietary) [1]: 
+```
+
+Then the package is there under the `vendor` directory, with git initialized,  
+remote repository added, it is all ready for you to commit and push the files.
+
+```bash
 git commit -m "Initial commit"
-git remote add origin git@git.example.com:my/project.git
 git push
 ```
 
 Now you have a private composer repository, your first `Phwoolcon package`.
 
-If you want to share it to others, you can publish it on [Github](https://github.com) and [Packagist](https://packagist.org).
+If you want to share it to others, you can publish it on [GitHub](https://github.com) and [Packagist](https://packagist.org).
 
-### 2.3.2. Update Codes
-Return to your working directory (i.e. the Phwoolcon Bootstrap directory), then:
+### 2.3.2. Import Your Package
+Now you can import your newly created package.
+
+See [2.2. Import Packages](#s2.2)
+
+### 2.3.3. Update Codes
 ```bash
 bin/update
 ```
+This script will do:
+
+* `git pull` to update the framework (`phwoolcon/bootstrap`) itself;
+* `composer update` to update all composer packages, including your project;
+* `bin/cli migrate:up` to run DB migration scripts;
+* `bin/dump-autoload` to update composer autoload, apply latest  
+assets, configs, locales, generate model traits and IDE helper.
 
 ## 2.4. Phwoolcon Configuration
 Project configuration files are symlinked from packages into `app/config` directory.
@@ -185,7 +187,7 @@ Phwoolcon makes it simple:
 * Finally, add them to `composer.json` in your project package.
 
 **IMPORTANT** Any private repositories **MUST** be declared in the `repositories` section  
-in the file `composer.local.json`, which was created in step [2.2.](#s2.2)
+in the file `composer.local.json`, which was created in step [2.3.1 Create a Phwoolcon Package](#s2.3.1)
 
 ## 2.6. Build / Deploy
 It was a pain to deploy projects that used composer, because:

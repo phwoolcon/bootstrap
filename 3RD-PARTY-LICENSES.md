@@ -7,3 +7,4 @@
 * [Swift Mailer](https://github.com/swiftmailer/swiftmailer) is licensed under the [MIT License](https://github.com/swiftmailer/swiftmailer/blob/master/LICENSE)
 * [Symfony Console](https://github.com/symfony/console) is licensed under the [MIT License](https://github.com/symfony/console/blob/master/LICENSE)
 * [Symfony Polyfill / Mbstring](https://github.com/symfony/polyfill-mbstring) is licensed under the [MIT License](https://github.com/symfony/polyfill-mbstring/blob/master/LICENSE)
+* [The League Skeleton](https://github.com/thephpleague/skeleton) is licensed under the [MIT License](https://github.com/thephpleague/skeleton/blob/master/LICENSE.md)
