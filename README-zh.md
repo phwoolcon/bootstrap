@@ -305,9 +305,9 @@ bin/cli service uninstall
 * Orders
 * Payment
 
-## 5. 许可证
-Phwoolcon Bootstrap 采用 [Apache License 2.0](LICENSE) 进行许可
-
-### 5.1. 第三方软件
+## 5. 致谢
 Phwoolcon Bootstrap 使用了第三方库和其他资源，它们可能采用了与 Phwoolcon  
-不同的许可证进行发布，详情请见 [Third Party Licenses](3RD-PARTY-LICENSES.md)。
+不同的许可证进行发布，详情请见 [Credits](CREDITS.md)。
+
+## 6. 许可证
+Phwoolcon Bootstrap 采用 [Apache License 2.0](LICENSE.md) 进行许可

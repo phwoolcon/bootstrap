@@ -307,12 +307,12 @@ bin/cli service uninstall
 * Orders
 * Payment
 
-## 5. License
-Phwoolcon Bootstrap is licensed under the [Apache License 2.0](LICENSE)
-
-### 5.1. Third Party Software
+## 5. Credits
 Phwoolcon Bootstrap uses third-party libraries or other resources that  
 may be distributed under licenses different than Phwoolcon, please  
-check [Third Party Licenses](3RD-PARTY-LICENSES.md) for details.
+check [Credits](CREDITS.md) for details.
+
+## 6. License
+Phwoolcon Bootstrap is licensed under the [Apache License 2.0](LICENSE.md)
 
 [中文](README-zh.md)
