@@ -86,7 +86,10 @@ function sendHttpStatus($code)
 function exceptionHandler($exception)
 {
     profilerStop();
-    Log::exception($exception);
+    try {
+        Log::exception($exception);
+    } catch (Exception $e) {
+    }
     if ($exception instanceof HttpException) {
         $response = $exception->toResponse();
         $response->send();
