@@ -1,4 +1,5 @@
 <?php
+
 use Phwoolcon\Exception\HttpException;
 use Phwoolcon\Log;
 
@@ -89,6 +90,10 @@ function exceptionHandler($exception)
     if ($exception instanceof HttpException) {
         $response = $exception->toResponse();
         $response->send();
+        return;
+    }
+    if (isset($_SERVER['PHWOOLCON_EXCEPTION_HANDLER'])) {
+        call_user_func($_SERVER['PHWOOLCON_EXCEPTION_HANDLER'], $exception);
         return;
     }
     sendHttpStatus(500);
