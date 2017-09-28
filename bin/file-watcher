@@ -17,16 +17,18 @@ contains() {
     fi
 }
 
-is_locale() {
-    if contains "$1" "locale"
-    then
-        return 0    # is a locale file
-    else
-        return 1    # not a locale file
-    fi
+needs_refresh() {
+    FILENAME=${1//[\\]/\/}
+    for TYPE in "locale/" "config/" "assets/"; do   #  "view/" "migrations/"
+        if contains "$FILENAME" "$TYPE"
+        then
+            return 0    # needs refresh
+        fi
+    done
+    return 1            # doesn't need refresh
 }
 
-if is_locale "$1"
+if needs_refresh "$1"
 then
     bin/dump-autoload
 fi
