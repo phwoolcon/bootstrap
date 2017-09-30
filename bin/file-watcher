@@ -19,7 +19,15 @@ contains() {
 
 needs_refresh() {
     FILENAME=${1//[\\]/\/}
-    for TYPE in "locale/" "config/" "assets/"; do   #  "view/" "migrations/"
+
+    for TYPE in "/app/" "/bin/" "/public/"; do   #  skip compiled files
+        if contains "$FILENAME" "$TYPE"
+        then
+            return 1    # skip
+        fi
+    done
+
+    for TYPE in "/locale/" "/config/" "/assets/"; do   #  "view/" "migrations/"
         if contains "$FILENAME" "$TYPE"
         then
             return 0    # needs refresh
@@ -30,5 +38,8 @@ needs_refresh() {
 
 if needs_refresh "$1"
 then
-    bin/dump-autoload
+    composer dump-autoload --optimize --no-scripts
+    vendor/bin/update-phwoolcon-package-resource
+    bin/convert-autoload
+    bin/cli clear:cache -calmr
 fi
