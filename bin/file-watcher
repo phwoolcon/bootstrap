@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 cd "$(dirname "$( dirname "${BASH_SOURCE[0]}" )")"
 
+EVENT_FILE=$1
+
 # contains(string, substring)
 # https://stackoverflow.com/a/8811800
 #
@@ -36,10 +38,40 @@ needs_refresh() {
     return 1            # doesn't need refresh
 }
 
-if needs_refresh "$1"
+smooth_wait() {
+    mkdir -p ${RUN_DIR}
+    TIMESTAMP_FILE=${RUN_DIR}/wait
+    TIMESTAMP=$(date +%s%N)
+    echo ${TIMESTAMP} > ${TIMESTAMP_FILE}
+    sleep 1s
+    LAST_UPDATE=$(cat ${TIMESTAMP_FILE})
+
+    if [[ "${LAST_UPDATE}" == "${TIMESTAMP}" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+acquire_lock() {
+    if [ -e ${LOCK_FILE} ] && [[ $(( `date +%s` - `stat "${LOCK_FILE}" -c %Y` )) < 60 ]]; then
+        exit
+    fi
+    echo $$ > ${LOCK_FILE}
+}
+
+release_lock() {
+    rm -f ${LOCK_FILE}
+}
+
+RUN_DIR=storage/file-watcher
+LOCK_FILE=${RUN_DIR}/pid
+if needs_refresh "${EVENT_FILE}" && smooth_wait
 then
+    acquire_lock
     composer dump-autoload --optimize --no-scripts
     vendor/bin/update-phwoolcon-package-resource
     bin/convert-autoload
     bin/cli clear:cache -calmr
+    release_lock
 fi
