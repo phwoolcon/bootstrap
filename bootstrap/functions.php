@@ -139,7 +139,7 @@ function profilerStop($type = 'fpm')
         static $profilerDir;
         $data = xhprof_disable();
         $profilerDir || is_dir($profilerDir = storagePath('profiler')) or mkdir($profilerDir, 0777, true);
-        $pathInfo = strtr($_SERVER['REQUEST_URI'], ['/' => '|']);
+        $pathInfo = strtr($_SERVER['REQUEST_URI'], ['/' => '~', '?' => '@', '&' => '!']);
         $microTime = explode(' ', microtime());
         $reportFile = $microTime[1] . '-' . substr($microTime[0], 2) . '-' . $_SERVER['REQUEST_METHOD'] . $pathInfo;
         $profiler or $profiler = new XHProfRuns_Default($profilerDir);
