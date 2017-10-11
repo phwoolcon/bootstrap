@@ -20,7 +20,7 @@
     },
     "autoload": {
         "classmap": [
-            "app"
+            "app/library"
         ],
         "psr-4": {
             "Tests\\": "tests"
@@ -37,10 +37,10 @@
             "bin/install/generate-cookie-encrypt-key"
         ],
         "pre-autoload-dump": [
-            "vendor/bin/update-phwoolcon-package-resource"
         ],
         "post-autoload-dump": [
             "bin/convert-autoload",
+            "vendor/bin/update-phwoolcon-package-resource",
             "bin/cli clear:cache -calmr"
         ]
     },
