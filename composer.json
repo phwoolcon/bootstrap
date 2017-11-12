@@ -42,7 +42,8 @@
             "bin/convert-autoload",
             "vendor/bin/update-phwoolcon-package-resource",
             "bin/cli clear:cache -calmr"
-        ]
+        ],
+        "pure-update": "@composer update --no-scripts"
     },
     "extra": {
         "branch-alias": {
