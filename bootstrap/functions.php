@@ -117,7 +117,14 @@ function errorHandler($errNo, $errStr, $errFile, $errLine)
     ];
     $errLevel = $errNo;
     isset($levels[$errNo]) and $errLevel = $levels[$errNo];
-    throw new ErrorException($errLevel . ' - ' . $errStr, $errNo, 1, $errFile, $errLine);
+    $exception = new ErrorException($errLevel . ' - ' . $errStr, $errNo, 1, $errFile, $errLine);
+    if (empty($_SERVER['PHWOOLCON_CONTINUE_ON_ERROR'])) {
+        throw $exception;
+    }
+    try {
+        Log::exception($exception);
+    } catch (Exception $e) {
+    }
 }
 
 function profilerStart()
