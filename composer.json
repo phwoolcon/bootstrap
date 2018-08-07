@@ -13,6 +13,7 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "optimize-autoloader": true,
     "require": {
         "php": ">=5.5.0",
         "phwoolcon/phwoolcon": "~1.0",
