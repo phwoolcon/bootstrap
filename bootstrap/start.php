@@ -20,7 +20,6 @@ if (!is_file($includes = ROOT_PATH . '/vendor/composer/autoload_phalcon_files.ph
     echo $error = sprintf('Autoload not ready, please run command "%s/bin/dump-autoload" first.', ROOT_PATH);
     throw new UnexpectedValueException($error);
 }
-include $includes;
 
 // Register class loader
 $loader = new Loader;
@@ -28,3 +27,5 @@ $loader->registerClasses(include ROOT_PATH . '/vendor/composer/autoload_classmap
     ->registerNamespaces(include ROOT_PATH . '/vendor/composer/autoload_phalcon_psr4.php')
     ->register(true); // Prepend support since Phalcon 3.1
 $di->setShared('loader', $loader);
+
+include $includes;
