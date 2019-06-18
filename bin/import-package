@@ -185,6 +185,8 @@ class ImportPackage
             $url = $githubHttpsPrefix . substr($url, $githubPrefixLength, -4) . "/{$branch}/{$file}";
         } elseif (Text::startsWith($url, 'git@')) {
             $mode = 'git';
+        } elseif (Text::startsWith($url, 'ssh://')) {
+            $mode = 'ssh';
         } elseif (Text::startsWith($url, 'http://') || Text::startsWith($url, 'https://')) {
             $mode = 'http';
         } elseif (preg_match('|^[^/^:]+/[^/^:^.]+$|', $url)) {
@@ -195,9 +197,11 @@ class ImportPackage
         $unableToDownloadMessage = "Unable to import package from {$rawUrl}";
         $this->downloadCache[$cacheKey1] = $this->downloadCache[$cacheKey2 = $url . $branch . $file] = false;
         switch ($mode) {
+            /* @noinspection PhpMissingBreakStatementInspection */
             case 'git':
-                $sshUrl = str_replace(':', '/', $url);
-                $command = "git archive --format=tgz --remote=ssh://{$sshUrl} {$branch} {$file} | tar xzO";
+                $url = 'ssh://' . str_replace(':', '/', $url);
+            case 'ssh':
+                $command = "git archive --format=tgz --remote={$url} {$branch} {$file} | tar xzO";
                 ob_start();
                 system($command, $returnValue);
                 $content = ob_get_clean();
