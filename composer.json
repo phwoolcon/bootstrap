@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.5.0",
         "phwoolcon/phwoolcon": "~1.0",
-        "wikimedia/composer-merge-plugin": "~1.3"
+        "wikimedia/composer-merge-plugin": "dev-master#96c44b1c"
     },
     "autoload": {
         "classmap": [
@@ -42,8 +42,10 @@
         "post-autoload-dump": [
             "bin/convert-autoload",
             "vendor/bin/update-phwoolcon-package-resource",
-            "bin/cli clear:cache -calmr"
+            "bin/cli clear:cache -calmr",
+            "@post-package-resources"
         ],
+        "post-package-resources": [""],
         "pure-update": "@composer update --no-scripts"
     },
     "extra": {
@@ -53,7 +55,9 @@
         "merge-plugin": {
             "include": [
                 "composer.local*.json"
-            ]
+            ],
+            "merge-scripts": true,
+            "merge-scripts-deep": true
         }
     }
 }
