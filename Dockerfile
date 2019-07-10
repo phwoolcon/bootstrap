@@ -1,62 +1,57 @@
 FROM alpine:3.9
 
-RUN echo "http://mirror.xtom.com.hk/alpine/v3.9/main" > /etc/apk/repositories; \
-    echo "http://mirror.xtom.com.hk/alpine/v3.9/community" >> /etc/apk/repositories; \
+ARG ALPINE_REPO=""
+ARG NGINX="1"
+ARG DEBUG_TOOLS="0"
+ARG UTILS_BASE="https://raw.githubusercontent.com/phwoolcon/docker-utils/master"
+ENV ENV="/etc/profile"
+RUN wget ${UTILS_BASE}/alpine/aliases.sh -O /etc/profile.d/aliases.sh; \
+    wget ${UTILS_BASE}/alpine/pick-mirror -O /usr/local/bin/pick-mirror; \
+    wget ${UTILS_BASE}/alpine/determine-fpm-workers -O /usr/local/bin/determine-fpm-workers; \
+    chmod +x /usr/local/bin/*; \
+    pick-mirror v3.9; \
     apk update; apk upgrade; \
-    apk add --no-cache bash coreutils nginx \
+    apk add --no-cache bash coreutils \
     php7 php7-curl php7-fileinfo php7-fpm php7-gd php7-json php7-mbstring php7-opcache php7-openssl \
     php7-pdo php7-pdo_mysql php7-pecl-redis php7-phalcon php7-simplexml php7-sodium php7-tokenizer php7-xml php7-zip \
     composer;
-RUN mkdir -p /srv/http/app/config/production /run/nginx /etc/nginx/snippets; \
-    printf "alias ls='ls --color'\n\
-alias ll='ls -la --group-directories-first'\n\
-alias lh='ll -h'\n\
-alias ping='ping -c4'\n\
-alias apk-add='apk add --no-cache'\n\
-alias apk-del='apk del'\n\
-alias apk-update='apk update'\n\
-alias apk-upgrade='apk upgrade'\n\
-" > /root/.bashrc; \
-    printf "\n\
-fastcgi_split_path_info ^(.+?\.php)(/.*)\$;\n\
-try_files \$fastcgi_script_name =404;\n\
-set \$path_info \$fastcgi_path_info;\n\
-fastcgi_param PATH_INFO \$path_info;\n\
-fastcgi_index index.php;\n\
-include fastcgi.conf;\n" > /etc/nginx/snippets/fastcgi-php.conf; \
-    printf "\n\
-log_format new '\$remote_addr，\$host，\$time_iso8601，\$status，'\n\
-    '\$request_time，\$request_length，\$bytes_sent，\$http_referer，\$request，\$http_user_agent';\n\
-" > /etc/nginx/conf.d/00-log-formats.conf; \
-    printf "\n\
-server {\n\
-    listen 80 default_server;\n\
-    server_name     _;\n\
-    root /srv/http/public;\n\
-    index  index.php index.html index.htm;\n\n\
-    access_log off;\n\
-    error_log /var/log/nginx/phwoolcon_error.log;\n\n\
-    location / {\n\
-        try_files \$uri \$uri/ /index.php?\$query_string;\n\
-    }\n\n\
-    location ~ \.php\$ {\n\
-        include snippets/fastcgi-php.conf;\n\
-        fastcgi_pass 127.0.0.1:9000;\n\
-        access_log /var/log/nginx/phwoolcon_access.log new buffer=128k flush=5s;\n\
-    }\n\
-}\n" > /etc/nginx/conf.d/default.conf; \
-    sed -i 's|127.0.0.1:9000|0.0.0.0:9000|g' /etc/php7/php-fpm.d/www.conf; \
-    printf "#!/usr/bin/env bash\n\
-cd /srv/http;\n\
-mkdir -p storage/{cache,logs,session} public/{assets,static,uploads}\n\
-bin/dump-autoload > /dev/null;\n\
-bin/cli migrate:up\n\
-bin/dump-autoload;\n\
-chown -R nobody:nobody storage/ public/static/ public/uploads/;\n\
+RUN ( [ "$DEBUG_TOOLS" = "1" ] ) && { \
+        apk add --no-cache vim htop iftop iotop; \
+        wget ${UTILS_BASE}/dusort -O /usr/local/bin/dusort; \
+        chmod +x /usr/local/bin/dusort; \
+        >&2 echo "Debug tools installed, by demand"; \
+    } || echo "";
+RUN mkdir -p /srv/http/app/config/production /mnt/data; \
+    printf "php-fpm7 -F;\n" > /start.sh; \
+    ( [ "$NGINX" = "1" ] ) && { \
+        apk add --no-cache nginx; \
+        mkdir -p /run/nginx; \
+        wget ${UTILS_BASE}/alpine/nginx/00-log-formats.conf -O /etc/nginx/conf.d/00-log-formats.conf; \
+        wget ${UTILS_BASE}/alpine/nginx/default.conf -O /etc/nginx/conf.d/default.conf; \
+        sed -i 's|/var/log|/mnt/data/log|g' /etc/nginx/nginx.conf; \
+        printf "mkdir -p /mnt/data/log/nginx;\n\
 php-fpm7 -D;\n\
-nginx -g 'daemon off;'" > /entrypoint.sh; \
+nginx -g 'daemon off;'\n" > /start.sh; \
+    } || >&2 echo "Nginx not installed, by demand";
+RUN echo 'error_log = /mnt/data/log/php7/error.log' > /etc/php7/php-fpm.d/00-log.conf; \
+    sed -i 's|expose_php = On|expose_php = Off|g' /etc/php7/php.ini; \
+    sed -i 's|/var/log|/mnt/data/log|g; s|127.0.0.1:9000|0.0.0.0:9000|g; s|pm = dynamic|pm = static|g' \
+    /etc/php7/php-fpm.d/www.conf; \
+    printf "#!/usr/bin/env bash\n\
+determine-fpm-workers;\n\
+mkdir -p /mnt/data/{config,log/php7,log/app};\n\
+cd /srv/http;\n\
+mkdir -p storage/{cache,session} public/{assets,static,uploads};\n\
+ln -snf /mnt/data/config/*.php app/config/production/;\n\
+ln -snf /mnt/data/log/app storage/logs;\n\
+bin/dump-autoload > /dev/null;\n\
+bin/cli migrate:up;\n\
+bin/dump-autoload;\n\
+chown -R nobody:nobody storage/ public/{static,uploads} /mnt/data/log/app;\n" > /entrypoint.sh; \
+    cat /start.sh >> /entrypoint.sh; \
+    rm /start.sh; \
     chmod +x /entrypoint.sh;
 COPY . /srv/http/
+VOLUME /mnt/data
 EXPOSE 80 9000
-CMD ["/bin/bash"]
 ENTRYPOINT ["/entrypoint.sh"]
