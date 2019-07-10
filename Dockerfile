@@ -45,6 +45,7 @@ server {\n\
         access_log /var/log/nginx/phwoolcon_access.log new buffer=128k flush=5s;\n\
     }\n\
 }\n" > /etc/nginx/conf.d/default.conf; \
+    sed -i 's|127.0.0.1:9000|0.0.0.0:9000|g' /etc/php7/php-fpm.d/www.conf; \
     printf "#!/usr/bin/env bash\n\
 cd /srv/http;\n\
 mkdir -p storage/{cache,logs,session} public/{assets,static,uploads}\n\
@@ -56,6 +57,6 @@ php-fpm7 -D;\n\
 nginx -g 'daemon off;'" > /entrypoint.sh; \
     chmod +x /entrypoint.sh;
 COPY . /srv/http/
-EXPOSE 80
+EXPOSE 80 9000
 CMD ["/bin/bash"]
 ENTRYPOINT ["/entrypoint.sh"]
