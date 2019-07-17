@@ -12,7 +12,7 @@ RUN wget ${UTILS_BASE}/alpine/aliases.sh -O /etc/profile.d/aliases.sh; \
     pick-mirror v3.9; \
     apk update; apk upgrade; \
     apk add --no-cache bash coreutils \
-    php7 php7-curl php7-fileinfo php7-fpm php7-gd php7-json php7-mbstring php7-opcache php7-openssl \
+    php7 php7-curl php7-ctype php7-fileinfo php7-fpm php7-gd php7-json php7-mbstring php7-opcache php7-openssl \
     php7-pdo php7-pdo_mysql php7-pecl-redis php7-phalcon php7-simplexml php7-sodium php7-tokenizer php7-xml php7-zip \
     composer;
 RUN ( [ "$DEBUG_TOOLS" = "1" ] ) && { \
