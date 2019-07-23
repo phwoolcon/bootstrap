@@ -27,6 +27,7 @@ RUN mkdir -p /srv/http/app/config/production /mnt/data; \
         apk add --no-cache nginx; \
         mkdir -p /run/nginx; \
         wget ${UTILS_BASE}/alpine/nginx/00-log-formats.conf -O /etc/nginx/conf.d/00-log-formats.conf; \
+        wget ${UTILS_BASE}/alpine/nginx/01-behind-proxy.conf -O /etc/nginx/conf.d/01-behind-proxy.conf; \
         wget ${UTILS_BASE}/alpine/nginx/default.conf -O /etc/nginx/conf.d/default.conf; \
         sed -i 's|/var/log|/mnt/data/log|g' /etc/nginx/nginx.conf; \
         printf "mkdir -p /mnt/data/log/nginx;\n\
